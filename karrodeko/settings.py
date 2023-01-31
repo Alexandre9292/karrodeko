@@ -24,10 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY") 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-#ALLOWED_HOSTS = ['51.254.103.71', 'karrodeko.fr', 'www.karrodeko.fr']
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['51.254.103.71', 'karrodeko.fr', 'www.karrodeko.fr']
+#ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -123,7 +123,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-#STATIC_ROOT = BASE_DIR.joinpath('static/')
+STATIC_ROOT = BASE_DIR.joinpath('static/')
 
 STATICFILES_DIRS = [
     BASE_DIR.joinpath('static')

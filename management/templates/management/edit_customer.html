@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="form-cust">
+    <form method="post">
+        <div class="form-content">
+            <label for="id_nom">Nom</label>{{ form.nom }}
+        </div>
+        <div class="form-content">
+            <label for="id_prenom">Prenom</label>{{ form.prenom }}
+        </div>
+        <div class="form-content">
+            <label for="id_numero">Numéro</label>{{ form.numero }}
+        </div>
+        <div class="form-content">
+            <label for="id_email">Email</label>{{ form.email }}
+        </div>
+        <div class="form-content">
+            <label for="id_description">Description</label>{{ form.description }}
+        </div>
+        {% csrf_token %}
+        <p class="button-form"><input type="submit" name="commit" value="Enregistrer"></p> 
+    </form>
+</div>
+
+{% endblock %}

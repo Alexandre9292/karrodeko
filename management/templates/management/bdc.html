@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="info-bdc">
+
+    </div>
+    <div class="signature">
+
+    </div>
+
+    <div class="button-bdc">
+        <a href="{% url 'edit_customer' customer_id %}">
+            <div class="button-element">
+                <p>Envoyer</p>
+            </div>
+        </a>
+    </div>
+
+{% endblock %}

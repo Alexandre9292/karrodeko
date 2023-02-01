@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="info-customer">
+        <table>
+            <tbody>
+                <tr>
+                    <td class="info-label">Nom</td>
+                    <td class="info-value">{{ customer.nom }}</td>
+                </tr>   
+                <tr>
+                    <td class="info-label">Prénom</td>
+                    <td class="info-value">{{ customer.prenom }}</td>
+                </tr> 
+                <tr>
+                    <td class="info-label">Numéro</td>
+                    <td class="info-value">{{ customer.numero }}</td>
+                </tr> 
+                <tr>
+                    <td class="info-label">Mail</td>
+                    <td class="info-value">{{ customer.email }}</td>
+                </tr> 
+            </tbody>
+        </table>
+        <p>Description </p>
+        <p>{{ customer.description }}</p>
+    </div>
+
+    <div class="button-cust">
+        <a href="{% url 'edit_customer' customer.id %}">
+            <div class="button-element">
+                <span>Modifier</span>
+            </div>
+        </a>
+        {% if customer.status < 3  %}
+            <a href="{% url 'bon_de_commande' customer.id %}">
+                <div class="button-element">
+                    <span>Valider</span>
+                </div>
+            </a>
+        {% else %}
+            <a href="{% url 'bon_de_commande' customer.id %}">
+                <div class="button-element">
+                    <span>Retour en atelier</span>
+                </div>
+            </a>
+        {% endif %}
+        <a href="{% url 'etiquette' customer.id %}">
+            <div class="button-element">
+                <span>Etiquette</span>
+            </div>
+        </a>        
+        {% if customer.status > 2  %}
+            <a href="{% url 'bon_de_commande' customer.id %}">
+                <div class="button-element">
+                    <span>Bon de commande</span>
+                </div>
+            </a>
+        {% endif %}
+    </div>
+
+{% endblock %}

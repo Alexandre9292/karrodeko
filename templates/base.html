@@ -6,10 +6,12 @@
         <!--<link rel="shortcut icon" type="image/x-icon" href="/static/images/logo.ico"/> -->
 
         <!-- <script src="{% static 'app.js' %}"></script> -->
+
+        {% block javascripts %}{% endblock javascripts %}
     </head>
     <body>
         <header>
-            <div class="content-header">               
+            <div class="content-header no-print">               
                 <a href="{% url 'dashbord' %}" style="text-decoration: none;">
                     <img class="logo" src="{% static 'images/logo.jpg'%}">  
                 </a> 
@@ -20,7 +22,7 @@
             {% block content %}{% endblock content %}
         </div>
         <footer>
-            <div class="sub_footer">
+            <div class="sub_footer no-print">
                 <p>Copyright 2023 KARRO DEKO</p>
             </div>
         </footer>

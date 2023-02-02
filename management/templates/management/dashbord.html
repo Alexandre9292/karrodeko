@@ -2,7 +2,24 @@
 {% load static %}
 {% block content %}
 
-    <div class="tab-list">
+
+
+    <div class="button">
+        <div class="button-dash">
+            <a href="{% url 'new_customer' %}">
+                <div class="button-element">
+                    <span>Créer</span>
+                </div>
+            </a>
+            <a class="button-scan" href="{% url 'new_customer' %}">
+                <div class="button-element">
+                    <span>Scan</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="tab-list tableau-dash">
         <table>
             <thead>
                 <tr class="ext_tab_title">
@@ -23,20 +40,5 @@
                 {% endfor %} 
             </tbody>
         </table>
-    </div>
-
-    <div class="button">
-        <div class="button-dash">
-            <a href="{% url 'new_customer' %}">
-                <div class="button-element">
-                    <span>Créer</span>
-                </div>
-            </a>
-            <a href="{% url 'new_customer' %}">
-                <div class="button-element">
-                    <span>Scan</span>
-                </div>
-            </a>
-        </div>
     </div>
 {% endblock %}

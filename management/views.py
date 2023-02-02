@@ -1,5 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from . import forms, models
+import qrcode
+from django.conf import settings
+from django.urls import reverse
+import os
+
 
 #Dashbord
 def dashbord(request):
@@ -25,7 +30,18 @@ def edit_customer(request, customer_id):
         if form.is_valid():
             customer = form.save()
             return redirect('etiquette', customer_id=customer.id)
-    return render(request, 'management/edit_customer.html', context={'form': form})
+    return render(request, 'management/edit_customer.html', context={'form': form, 'customer': customer})
+
+#Supprimer client
+def delete_customer(request, customer_id):
+    customer = get_object_or_404(models.Customer, id=customer_id)
+    customer.delete()
+    return redirect('dashbord')  
+
+#Confirmation de suppression client
+def delete_customer_confirmation(request, customer_id):
+    customer = get_object_or_404(models.Customer, id=customer_id)
+    return render(request, 'management/delete_customer.html', context={'customer': customer})    
 
 #Info du client
 def info_customer(request, customer_id):
@@ -33,10 +49,49 @@ def info_customer(request, customer_id):
     return render(request, 'management/info_customer.html', context={'customer': customer})
 
 #Bon de commande    
-def bon_de_commande(request):
-    return render(request, 'management/bon_de_commande.html')
+def bon_de_livraison(request, customer_id):
+    customer = get_object_or_404(models.Customer, id=customer_id)
+    return render(request, 'management/bdl.html', context={'customer': customer})
+
+#Validation  
+def validation(request, customer_id):
+    customer = get_object_or_404(models.Customer, id=customer_id)
+    customer.status = 3
+    customer.save()
+    return render(request, 'management/info_customer.html', context={'customer': customer})
+
+#Retour en attelier  
+def retour_atelier(request, customer_id):
+    customer = get_object_or_404(models.Customer, id=customer_id)
+    customer.status = 2
+    customer.save()
+    return render(request, 'management/info_customer.html', context={'customer': customer})
 
 #Etiquette
 def etiquette(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
-    return render(request, 'management/etiquette.html', context={'customer': customer})
+    directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom
+
+    if os.path.isdir(directory) is False :
+        os.makedirs(directory)
+        url = request.build_absolute_uri(reverse("info_customer", args=[customer_id]))
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(url)
+        qr.make(fit=True)
+
+        img = qr.make_image(fill_color="black", back_color="white")
+        img.save(directory + "/code.jpg")
+    
+    code_url = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + "/code.jpg"
+
+    return render(request, 'management/etiquette.html', context={'customer': customer, 'code_url': code_url})
+
+#Impressio de l'étiquette
+def etiquette_impression(request, customer_id):
+    customer = get_object_or_404(models.Customer, id=customer_id)
+    return render(request, 'management/info_customer.html', context={'customer': customer})

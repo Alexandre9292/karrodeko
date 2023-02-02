@@ -2,6 +2,19 @@
 {% load static %}
 {% block content %}
 
+    <a href="{% url 'dashbord' %}"><div class="arrow-back"></div></a>
+
+    <div class="info-status">
+        {% if customer.status == 1 %}
+            <p style="background: #830000; color: #FFFFFF;">En attente</p>
+        {% elif customer.status == 2 %}
+            <p style="background: #ffe70f; color: #000000;">En Cours</p>
+        {% elif customer.status == 3 %}
+            <p style="background: #008325; color: #000000;">Terminé</p>
+        {% else %}
+            <p style="background: #000d83; color: #FFFFFF;">Livré</p>
+        {% endif %}
+    </div>
     <div class="info-customer">
         <table>
             <tbody>
@@ -24,7 +37,7 @@
             </tbody>
         </table>
         <p>Description </p>
-        <p>{{ customer.description }}</p>
+        <p>{{ customer.description|linebreaks }}</p>
     </div>
 
     <div class="button-cust">
@@ -34,13 +47,13 @@
             </div>
         </a>
         {% if customer.status < 3  %}
-            <a href="{% url 'bon_de_commande' customer.id %}">
+            <a href="{% url 'validation' customer.id %}">
                 <div class="button-element">
                     <span>Valider</span>
                 </div>
             </a>
         {% else %}
-            <a href="{% url 'bon_de_commande' customer.id %}">
+            <a href="{% url 'retour_atelier' customer.id %}">
                 <div class="button-element">
                     <span>Retour en atelier</span>
                 </div>
@@ -52,12 +65,17 @@
             </div>
         </a>        
         {% if customer.status > 2  %}
-            <a href="{% url 'bon_de_commande' customer.id %}">
+            <a href="{% url 'bon_de_livraison' customer.id %}">
                 <div class="button-element">
-                    <span>Bon de commande</span>
+                    <span>Bon de livraison</span>
                 </div>
             </a>
-        {% endif %}
+        {% endif %}        
+        <a href="{% url 'delete_customer_confirmation' customer.id %}">
+            <div class="button-element">
+                <span>Supprimer</span>
+            </div>
+        </a>
     </div>
 
 {% endblock %}

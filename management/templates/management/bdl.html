@@ -2,6 +2,8 @@
 {% load static %}
 {% block content %}
 
+    <a href="{% url 'info_customer' customer.id %}"><div class="arrow-back"></div></a>
+
     <div class="info-bdc">
 
     </div>
@@ -9,10 +11,10 @@
 
     </div>
 
-    <div class="button-bdc">
-        <a href="{% url 'edit_customer' customer_id %}">
+    <div class="button">
+        <a href="{% url 'info_customer' customer.id %}">
             <div class="button-element">
-                <p>Envoyer</p>
+                <span>Envoyer</span>
             </div>
         </a>
     </div>

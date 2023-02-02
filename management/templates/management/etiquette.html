@@ -2,11 +2,29 @@
 {% load static %}
 {% block content %}
 
-    <div class="etiquette">
-        <p>
-            Nom : {{ customer.prenom }}
-            <img src="" alt="">
-        </p>
+    <a href="{% url 'info_customer' customer.id %}"><div class="arrow-back no-print"></div></a>
+    
+    <div id="etiquette" class="etiquette">
+        <img class="img-qr" src="{{ code_url }}">
+        <p>{{ customer.nom }} {{ customer.prenom }}</p>
     </div>
+
+    <div class="button no-print">
+        <a onclick="printEtiquette()">
+            <div class="button-element">
+                <span>Imprimer</span>
+            </div>
+        </a>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script>
+    function printEtiquette() {
+        window.print();
+    }
+</script>
 
 {% endblock %}

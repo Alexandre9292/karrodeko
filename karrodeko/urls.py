@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 import management.views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),    
@@ -23,6 +25,15 @@ urlpatterns = [
     path('customer/new', management.views.new_customer, name='new_customer'),
     path('customer/<int:customer_id>/', management.views.info_customer, name='info_customer'),
     path('customer/<int:customer_id>/edit', management.views.edit_customer, name='edit_customer'),
-    path('customer/<int:customer_id>/BDC', management.views.bon_de_commande, name='bon_de_commande'),
+    path('customer/<int:customer_id>/delete', management.views.delete_customer, name='delete_customer'),
+    path('customer/<int:customer_id>/delete-confirmation', management.views.delete_customer_confirmation, name='delete_customer_confirmation'),
+    path('customer/<int:customer_id>/BDL', management.views.bon_de_livraison, name='bon_de_livraison'),
+    path('customer/<int:customer_id>/validation', management.views.validation, name='validation'),
+    path('customer/<int:customer_id>/retour-atelier', management.views.retour_atelier, name='retour_atelier'),
     path('customer/<int:customer_id>/etiquette', management.views.etiquette, name='etiquette'),
+    path('customer/<int:customer_id>/etiquette/impression', management.views.etiquette_impression, name='etiquette_impression'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

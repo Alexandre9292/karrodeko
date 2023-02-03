@@ -32,6 +32,7 @@ urlpatterns = [
     path('customer/<int:customer_id>/retour-atelier', management.views.retour_atelier, name='retour_atelier'),
     path('customer/<int:customer_id>/etiquette', management.views.etiquette, name='etiquette'),
     path('customer/<int:customer_id>/etiquette/impression', management.views.etiquette_impression, name='etiquette_impression'),
+    path('customer/scanner', management.views.scanner, name='scanner'),
 ]
 
 if settings.DEBUG:

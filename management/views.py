@@ -88,8 +88,10 @@ def etiquette(request, customer_id):
 
         img = qr.make_image(fill_color="black", back_color="white")
         img.save(directory + "/code.jpg")
+        customer.qr_path = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + "/code.jpg"
+        customer.save()
     
-    code_url = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + "/code.jpg"
+    code_url = customer.qr_path
 
     return render(request, 'management/etiquette.html', context={'customer': customer, 'code_url': code_url})
 

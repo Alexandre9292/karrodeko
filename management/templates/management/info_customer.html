@@ -41,40 +41,28 @@
     </div>
 
     <div class="button-cust">
-        <a href="{% url 'edit_customer' customer.id %}">
-            <div class="button-element">
+        <a class="button-element" href="{% url 'edit_customer' customer.id %}">
                 <span>Modifier</span>
-            </div>
         </a>
         {% if customer.status < 3  %}
-            <a href="{% url 'validation' customer.id %}">
-                <div class="button-element">
+            <a class="button-element" href="{% url 'validation' customer.id %}">
                     <span>Valider</span>
-                </div>
             </a>
         {% else %}
-            <a href="{% url 'retour_atelier' customer.id %}">
-                <div class="button-element">
+            <a class="button-element" href="{% url 'retour_atelier' customer.id %}">
                     <span>Retour en atelier</span>
-                </div>
             </a>
         {% endif %}
-        <a href="{% url 'etiquette' customer.id %}">
-            <div class="button-element">
+        <a class="button-element" href="{% url 'etiquette' customer.id %}">
                 <span>Etiquette</span>
-            </div>
         </a>        
         {% if customer.status > 2  %}
-            <a href="{% url 'bon_de_livraison' customer.id %}">
-                <div class="button-element">
+            <a class="button-element" href="{% url 'bon_de_livraison' customer.id %}">
                     <span>Bon de livraison</span>
-                </div>
             </a>
         {% endif %}        
-        <a href="{% url 'delete_customer_confirmation' customer.id %}">
-            <div class="button-element">
+        <a class="button-element" href="{% url 'delete_customer_confirmation' customer.id %}">
                 <span>Supprimer</span>
-            </div>
         </a>
     </div>
 

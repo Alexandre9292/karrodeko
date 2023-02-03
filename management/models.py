@@ -8,4 +8,5 @@ class Customer(models.Model):
     numero = models.CharField(max_length=100, blank=True, verbose_name='Numéro')
     email = models.EmailField(_('email address'), unique=True)
     description = models.TextField(max_length=5000, blank=True, verbose_name='Description')
+    qr_path = models.CharField(max_length=500, blank=True)
     status = models.IntegerField(blank=True, default=1)

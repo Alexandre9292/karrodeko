@@ -100,11 +100,9 @@ def etiquette_impression(request, customer_id):
 
 #Fonction de scanner
 def scanner(request):
-    customers = models.Customer.objects.all()
-    return render(request, 'management/dashbord.html', context={'list_customer': customers})
+     return redirect('dashbord')
 
 #Redirection en cas d'erreur 404
 def page_not_found_view(request, exception):
-    customers = models.Customer.objects.all()
-    return render(request, 'management/dashbord.html', context={'list_customer': customers})
+     return redirect('dashbord')
 

@@ -4,17 +4,84 @@
 
     <a href="{% url 'info_customer' customer.id %}"><div class="arrow-back"></div></a>
 
-    <div class="info-bdc">
-
+    <div class="info-bdl">
+        <div class="bdl-header">
+            <h1 style="margin: 20;">BON DE LIVRAISON</h1>
+            <img class="logo" src="{% static 'images/logo.jpg'%}" style="margin: 0;">  
+        </div>
+        <div class="bdl-content">
+            <div class="dbl-content-info">
+                <div class="bdl-local">
+                    <h2>KARRO DEKO</h2>
+                    <p>1 rue des poivriers,</p>
+                    <p>Bras-Panon 97412, La Réunion</p>
+                    <p>Téléphone: 0692 36 29 37</p>
+                </div>
+                <div class="bdl-dest">
+                    <h2>Destinataire : {{customer.nom}} {{customer.prenom}}</h2>
+                    <p>Email: {{customer.email}}</p>
+                    <p>Téléphone: {{customer.numero}}</p>
+                </div>
+            </div>
+            <br><br>
+            <div class="bdl-desc">
+                <h2>Description</h2>
+                <p>{{ customer.description|linebreaks }}</p>
+            </div>
+        </div>
+        <br><br>
+        <div class="signature">
+            <h2>Livré le: &nbsp;&nbsp;{{ bdl.date_livraison|date:"d-m-Y" }}</h2>
+            <form id="bdl-form" method="post">
+                {{ form.signature_path }}
+                <h2>Signature: </h2>
+                </br>
+                <div class="bdl-signature">
+                    <div id="signature"></div>
+                    <a id="clearCanvas" onclick="clearSignature()" >Effacer</a>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="signature">
 
-    </div>
-
-    <div class="button">
-        <a class="button-element" href="{% url 'info_customer' customer.id %}">
+    <div class="button-dash">
+        <a id="btn-submit" class="button-element">
             <span>Envoyer</span>
         </a>
     </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'admin/js/flashcanvas.js'%}"></script>
+<script src="{% static 'admin/js/jSignature.min.js'%}"></script>
+<script>
+
+    function clearSignature() {
+        $("#signature").jSignature("reset");
+    }
+
+    $(document).ready(function () {   
+        var signature = $("#signature").jSignature({ 
+            'color': '#000000',
+            'background-color': '#ffffff',
+            'decor-color': '#d0e3f0'
+        });
+        signature.find("canvas")[0].id = 'canvas';
+
+        $("#btn-submit").click(function() {
+           /*  var canvas = document.getElementById('canvas');
+            var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+            $("#id_signature_path").val(JSON.stringify(image)); */
+            var signature_data = $('#signature').jSignature('getData', 'svg');
+            $("#id_signature_path").val(signature_data);
+            $("#bdl-form").submit();            
+        }); 
+
+        $("#id_signature_path").hide();
+    });
+</script>
 
 {% endblock %}

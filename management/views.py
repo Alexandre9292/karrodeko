@@ -5,7 +5,9 @@ from django.conf import settings
 from django.urls import reverse
 import os
 from urllib.parse import urlparse
-
+from django.utils import timezone
+import datetime
+import cairosvg
 
 #Dashbord
 def dashbord(request):
@@ -53,7 +55,46 @@ def info_customer(request, customer_id):
 #Bon de commande    
 def bon_de_livraison(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
-    return render(request, 'management/bdl.html', context={'customer': customer})
+    if models.BDL.objects.filter(customer=customer).exists():
+        bdl = models.BDL.objects.filter(customer=customer)
+        bdl = bdl[0]
+    else:
+        bdl = models.BDL(customer=customer)
+        bdl.save()
+    form = forms.CreateSignatureForm(instance=customer)
+    if request.method == 'POST':
+        form = forms.CreateSignatureForm(request.POST, instance=customer)
+        if form.is_valid():            
+            signature_path = request.POST['signature_path']
+            # convertir les données SVG en PNG
+            png_data = cairosvg.svg2png(bytestring=signature_path.encode('utf-8'))
+
+            fichier = 'signature.png';            
+            directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom
+
+            # enregistrer le fichier PNG
+            with open(fichier, 'wb') as f:
+                f.write(png_data)
+
+            if os.path.isdir(directory) is False :
+                os.makedirs(directory)
+            f.save(directory + fichier)
+            customer.signature_path = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + fichier
+            customer.save() 
+
+
+            """ list(type, data) = explode(';', signature_path)
+            list(, image) = explode(',', data)
+            image_decodee = base64_decode(image)
+            fichier = 'signature.png';            
+            directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom
+            if os.path.isdir(directory) is False :
+                os.makedirs(directory)
+            image_decodee.save(directory + fichier)
+            customer.signature_path = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + fichier
+            customer.save()      """
+            return redirect('bon_de_livraison', customer_id=customer.id)
+    return render(request, 'management/bdl.html', context={'form': form, 'customer': customer, 'bdl': bdl})
 
 #Validation  
 def validation(request, customer_id):

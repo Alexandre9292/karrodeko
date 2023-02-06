@@ -424,6 +424,81 @@ header {
       }
   }
 
+/* ////////// BON DE LIVRAISON ////////// */
+
+ .info-bdl {
+    width: 21cm;
+    height: 29.7cm;
+    box-sizing : border-box;
+    border-radius:15px;
+    border: solid #830000;
+    background-color:#FFFFFF;
+    padding:20px;
+    margin-left: auto;
+    margin-right: auto;
+    
+    margin-bottom: 50px;
+    margin-top: 40px;
+ }
+
+ .bdl-header {
+    display: grid;
+    grid-template-columns: 80% 20%;
+    text-align: center;
+    width: 100%;
+    box-sizing : border-box;
+    border-bottom: solid #830000;
+    background-color:#FFFFFF;
+    padding:5px;
+    text-align: left;
+    font-size: 25px;
+ }
+
+ .bdl-content {
+    margin-top: 50px;
+ }
+
+ .dbl-content-info {    
+    display: grid;
+    grid-template-columns: 60% 40%;
+    text-align: left;
+ }
+
+ .bdl-signature{
+    text-align: center;
+ }
+
+ #clearCanvas {
+    text-align: center;
+    padding: 4px 25px;
+    margin-top: 25px;    
+    border: 1px solid;
+    border-radius: 16px;
+    outline: 0;
+    background: #830000; 
+    color: #FFFFFF;
+ }
+
+ #signature{
+    margin-bottom: 20px;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #FFFFFF ;    
+    border: 3px solid #000000; 
+ }
+
+@media (max-width: 800px) {
+    .bdl-header{
+        grid-template-columns: 70% 30%;
+        font-size: 15px;
+     }
+     .info-bdl {
+        width: 100%;
+        height: auto;
+     }
+}
+
 /* ////////// FOOTER ////////// */
 
 footer {

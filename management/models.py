@@ -10,3 +10,9 @@ class Customer(models.Model):
     description = models.TextField(max_length=5000, blank=True, verbose_name='Description')
     qr_path = models.CharField(max_length=500, blank=True)
     status = models.IntegerField(blank=True, default=1)
+    signature_path = models.CharField(max_length=500, blank=True)
+
+#Class qui gère les bon de livraisons
+class BDL(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    date_livraison = models.DateTimeField(auto_now_add=True)

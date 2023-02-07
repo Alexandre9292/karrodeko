@@ -1,3 +1,4 @@
+import base64
 from django.shortcuts import render, redirect, get_object_or_404
 from . import forms, models
 import qrcode
@@ -8,6 +9,9 @@ from urllib.parse import urlparse
 from django.utils import timezone
 import datetime
 import cairosvg
+from jsignature.utils import draw_signature
+from io import BytesIO
+from PIL import Image
 
 #Dashbord
 def dashbord(request):
@@ -61,39 +65,29 @@ def bon_de_livraison(request, customer_id):
     else:
         bdl = models.BDL(customer=customer)
         bdl.save()
-    form = forms.CreateSignatureForm(instance=customer)
-    if request.method == 'POST':
-        form = forms.CreateSignatureForm(request.POST, instance=customer)
-        if form.is_valid():            
-            signature_path = request.POST['signature_path']
-            # convertir les données SVG en PNG
-            png_data = cairosvg.svg2png(bytestring=signature_path.encode('utf-8'))
 
-            fichier = 'signature.png';            
-            directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom
+    form = forms.CreateSignatureForm()
+    if request.method == 'POST':
+        form = forms.CreateSignatureForm(request.POST)
+        fichier = '/signature.png';            
+        directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom 
+        signature = request.POST['signature']
+        if signature:            
+            if os.path.isdir(directory) is False :
+                os.makedirs(directory)
 
             # enregistrer le fichier PNG
-            with open(fichier, 'wb') as f:
-                f.write(png_data)
+            image_sign = open(directory + fichier, 'w')
+            with open(directory + fichier, "wb") as f:
+                f.write(base64.b64decode(signature.split(",")[1]))
+            image_sign.close()
 
-            if os.path.isdir(directory) is False :
-                os.makedirs(directory)
-            f.save(directory + fichier)
             customer.signature_path = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + fichier
             customer.save() 
+            bdl.is_signed = True
+            bdl.save()
+        return redirect('bon_de_livraison', customer_id=customer.id)
 
-
-            """ list(type, data) = explode(';', signature_path)
-            list(, image) = explode(',', data)
-            image_decodee = base64_decode(image)
-            fichier = 'signature.png';            
-            directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom
-            if os.path.isdir(directory) is False :
-                os.makedirs(directory)
-            image_decodee.save(directory + fichier)
-            customer.signature_path = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + fichier
-            customer.save()      """
-            return redirect('bon_de_livraison', customer_id=customer.id)
     return render(request, 'management/bdl.html', context={'form': form, 'customer': customer, 'bdl': bdl})
 
 #Validation  

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load jsignature_filters %}
 {% block content %}
 
     <a href="{% url 'info_customer' customer.id %}"><div class="arrow-back"></div></a>
@@ -32,15 +33,22 @@
         <br><br>
         <div class="signature">
             <h2>Livré le: &nbsp;&nbsp;{{ bdl.date_livraison|date:"d-m-Y" }}</h2>
-            <form id="bdl-form" method="post">
-                {{ form.signature_path }}
-                <h2>Signature: </h2>
-                </br>
-                <div class="bdl-signature">
-                    <div id="signature"></div>
-                    <a id="clearCanvas" onclick="clearSignature()" >Effacer</a>
+            {% if bdl.is_signed %}
+                <div class="signature-img">
+                    <img class="signature-img-cont" src="{{ customer.signature_path }}"> 
                 </div>
-            </form>
+            {% else %}
+                <form id="bdl-form" method="post" enctype="multipart/form-data">
+                    {{ form.signature }}
+                    <h2>Signature: </h2>
+                    </br>
+                    <div class="bdl-signature">
+                        <div id="signature"></div>
+                        <a id="clearCanvas" onclick="clearSignature()" >Effacer</a>
+                    </div>
+                    {% csrf_token %}
+                </form>
+            {% endif %}            
         </div>
     </div>
 
@@ -72,15 +80,12 @@
         signature.find("canvas")[0].id = 'canvas';
 
         $("#btn-submit").click(function() {
-           /*  var canvas = document.getElementById('canvas');
-            var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-            $("#id_signature_path").val(JSON.stringify(image)); */
-            var signature_data = $('#signature').jSignature('getData', 'svg');
-            $("#id_signature_path").val(signature_data);
+            var signature_data = $('#signature').jSignature('getData', 'image');
+            $("#id_signature").val(signature_data);
             $("#bdl-form").submit();            
         }); 
 
-        $("#id_signature_path").hide();
+        $("#id_signature").hide();
     });
 </script>
 

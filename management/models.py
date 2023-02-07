@@ -16,3 +16,4 @@ class Customer(models.Model):
 class BDL(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     date_livraison = models.DateTimeField(auto_now_add=True)
+    is_signed = models.BooleanField(default=False)

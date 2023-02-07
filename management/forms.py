@@ -8,7 +8,5 @@ class CreateCustomerForm(forms.ModelForm):
         fields = ['nom', 'prenom', 'numero', 'email', 'description']
 
 #Formulaire de création d'un bon de livraison
-class CreateSignatureForm(forms.ModelForm):
-    class Meta:
-        model = models.Customer
-        fields = ['signature_path']
+class CreateSignatureForm(forms.Form):
+    signature = forms.CharField(max_length = 1000, label='signature')

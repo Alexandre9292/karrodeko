@@ -488,6 +488,17 @@ header {
     border: 3px solid #000000; 
  }
 
+ .signature-img {
+    margin-bottom: 20px;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+ }
+
+ .signature-img-cont {
+    width: 100%;
+ }
+
 @media (max-width: 800px) {
     .bdl-header{
         grid-template-columns: 70% 30%;

@@ -1,0 +1,118 @@
+<html>
+    <head>
+        <title>KARRO DEKO</title>
+        
+         <style>
+            .info-bdl {
+                background-color:#FFFFFF;
+            }
+
+            .bdl-header {
+                text-align: center;
+                width: 100%;
+                box-sizing : border-box;
+                border-bottom: solid #830000;
+                background-color:#FFFFFF;
+                padding:5px;
+                text-align: left;
+                font-size: 30px;
+            }
+
+            .bdl-content {
+                margin-top: 50px;
+            }
+
+            .dbl-content-info {    
+                display: grid;
+                grid-template-columns: 60% 40%;
+                text-align: left;
+            }
+
+            .bdl-signature{
+                text-align: center;
+            }
+
+            #clearCanvas {
+                text-align: center;
+                padding: 4px 25px;
+                margin-top: 25px;    
+                border: 1px solid;
+                border-radius: 16px;
+                outline: 0;
+                background: #830000; 
+                color: #FFFFFF;
+            }
+
+            #signature{
+                margin-bottom: 20px;
+                width: 75%;
+                margin-left: auto;
+                margin-right: auto;
+                background-color: #FFFFFF ;    
+                border: 3px solid #000000; 
+            }
+
+            .signature-img {
+                margin-bottom: 20px;
+                width: 75%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .signature-img-cont {
+                width: 100%;
+            }
+
+            .logo {
+                height: 100px;
+            }
+         </style>
+
+    </head>
+    <body>
+
+        <div class="info-bdl">
+            <table>
+                <tbody>
+                    <tr>
+                        <td style="width: 90%;"><h1 style="margin: 20;font-size: 40px;">BON DE LIVRAISON</h1></td>
+                        <td style="width: 10%; text-align: right;"><img class="logo" src="/static/images/logo.jpg" style="margin: 0;"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="bdl-header">
+            </div>
+            <div class="bdl-content">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td style="width: 60%;">
+                                <h2>KARRO DEKO</h2>
+                            <p>1 rue des poivriers,</p>
+                            <p>Bras-Panon 97412, La Réunion</p>
+                            <p>Téléphone: 0692 36 29 37</p>
+                            </td>
+                            <td style="width: 40%; text-align: left;">
+                                <h2>Destinataire : {{customer.nom}} {{customer.prenom}}</h2>
+                                <p>Email: {{customer.email}}</p>
+                                <p>Téléphone: {{customer.numero}}</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br><br>
+                <div class="bdl-desc">
+                    <h2>Description</h2>
+                    <p>{{ customer.description|linebreaks }}</p>
+                </div>
+            </div>
+            <br><br>
+            <div class="signature">
+                <h2>Livré le: &nbsp;&nbsp;{{ bdl.date_livraison|date:"d-m-Y" }}</h2>
+                <div class="signature-img">
+                    <img class="signature-img-cont" src="{{ customer.signature_path }}"> 
+                </div>           
+            </div>
+        </div>
+    </body>
+</html>

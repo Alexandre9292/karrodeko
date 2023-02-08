@@ -33,6 +33,7 @@ urlpatterns = [
     path('customer/<int:customer_id>/etiquette', management.views.etiquette, name='etiquette'),
     path('customer/<int:customer_id>/etiquette/impression', management.views.etiquette_impression, name='etiquette_impression'),
     path('customer/scanner', management.views.scanner, name='scanner'),
+    path('customer/<int:customer_id>/BDL/mail/<int:bdl_id>/', management.views.send_bdl, name='send_bdl'),
 ]
 
 if settings.DEBUG:

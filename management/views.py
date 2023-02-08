@@ -13,6 +13,26 @@ from jsignature.utils import draw_signature
 from io import BytesIO
 from PIL import Image
 
+from reportlab.pdfgen import canvas
+from reportlab.platypus.tables import Table
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.colors import Color, HexColor
+
+from django.http import HttpResponse
+from django.template.loader import get_template
+from django.views import View
+from xhtml2pdf import pisa
+
+from django.http import FileResponse
+from django.template.loader import render_to_string
+import pdfkit
+
+from weasyprint import HTML
+
+
 #Dashbord
 def dashbord(request):
     customers = models.Customer.objects.all()
@@ -83,12 +103,31 @@ def bon_de_livraison(request, customer_id):
             image_sign.close()
 
             customer.signature_path = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + fichier
+            customer.status = 4
             customer.save() 
             bdl.is_signed = True
             bdl.save()
+            send_bdl(request, customer.id, bdl.id)
         return redirect('bon_de_livraison', customer_id=customer.id)
 
     return render(request, 'management/bdl.html', context={'form': form, 'customer': customer, 'bdl': bdl})
+
+#Génère le pdf et envoie le mail
+def send_bdl(request, customer_id, bdl_id):
+    
+    customer = get_object_or_404(models.Customer, id=customer_id)
+    bdl = get_object_or_404(models.BDL, id=bdl_id)
+
+    # Générer le HTML à partir d'une vue Django
+    html = render_to_string('management/bon_de_livraison_pdf.html', {'customer': customer, 'bdl': bdl})
+
+    directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom
+    if os.path.isdir(directory) is False :
+        os.makedirs(directory)
+
+    HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(directory + '/BonDeLivraison.pdf')
+
+    return redirect('bon_de_livraison', customer_id=customer.id)
 
 #Validation  
 def validation(request, customer_id):

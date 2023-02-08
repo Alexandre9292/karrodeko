@@ -53,9 +53,15 @@
     </div>
 
     <div class="button-dash">
-        <a id="btn-submit" class="button-element">
-            <span>Envoyer</span>
-        </a>
+        {% if bdl.is_signed  %}
+            <a class="button-element" href="{% url 'send_bdl' customer.id bdl.id %}">
+                <span>Envoyer</span>
+            </a>
+        {% else %}
+            <a id="btn-submit" class="button-element">
+                <span>Envoyer</span>
+            </a>
+        {% endif %}  
     </div>
 
 {% endblock %}
@@ -77,7 +83,6 @@
             'background-color': '#ffffff',
             'decor-color': '#d0e3f0'
         });
-        signature.find("canvas")[0].id = 'canvas';
 
         $("#btn-submit").click(function() {
             var signature_data = $('#signature').jSignature('getData', 'image');

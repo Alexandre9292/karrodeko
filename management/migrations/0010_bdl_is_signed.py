@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('management', '0009_remove_bdl_signature'),
+        ('management', '0005_alter_bdl_date_livraison'),
     ]
 
     operations = [

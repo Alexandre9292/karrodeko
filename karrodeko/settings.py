@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authentication',
     'management',
+    'jsignature',
 ]
 
 MIDDLEWARE = [
@@ -136,3 +137,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR.joinpath('media/')
+
+JSIGNATURE_WIDTH = 500
+JSIGNATURE_HEIGHT = 200

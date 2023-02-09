@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="login">
+        <h1>Connexion</h1>
+        <form method="post">
+            {% if form.errors %}
+                {{ form.errors }}
+            {% endif %}
+            <p><input type="text" name="username" value="" placeholder="Email"></p>
+            <p><input type="password" name="password" value="" placeholder="Mot de passe"></p>
+            {% csrf_token %}
+            <p class="submit"><input type="submit" name="commit" value="Login"></p>      
+        </form>
+    </div>
+    <div class="login-help">
+        <p>Mot de passe oublié? <a href="{% url 'password_reset' %}">Cliquer ici pour le modifier</a>.</p>
+    </div>
+
+{% endblock content %}
+
+
+
+  

@@ -6,6 +6,7 @@ from django.conf import settings
 from django.urls import reverse
 import os
 from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required, permission_required
 
 from weasyprint import HTML
 
@@ -13,11 +14,13 @@ from django.core.mail import EmailMessage
 
 
 #Dashbord
+@login_required
 def dashbord(request):
     customers = models.Customer.objects.all()
     return render(request, 'management/dashbord.html', context={'list_customer': customers})
 
 #Nouveau client
+@login_required
 def new_customer(request):
     form = forms.CreateCustomerForm()
     if request.method == 'POST':
@@ -28,6 +31,7 @@ def new_customer(request):
     return render(request, 'management/new_customer.html', context={'form': form})
 
 #Modifier client
+@login_required
 def edit_customer(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
     form = forms.CreateCustomerForm(instance=customer)
@@ -39,6 +43,7 @@ def edit_customer(request, customer_id):
     return render(request, 'management/edit_customer.html', context={'form': form, 'customer': customer})
 
 #Supprimer client
+@login_required
 def delete_customer(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
     customer.delete()
@@ -46,16 +51,19 @@ def delete_customer(request, customer_id):
     return render(request, 'management/dashbord.html', context={'list_customer': customers})
 
 #Confirmation de suppression client
+@login_required
 def delete_customer_confirmation(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
     return render(request, 'management/delete_customer.html', context={'customer': customer})    
 
 #Info du client
+@login_required
 def info_customer(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
     return render(request, 'management/info_customer.html', context={'customer': customer})
 
 #Bon de commande    
+@login_required
 def bon_de_livraison(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
     if models.BDL.objects.filter(customer=customer).exists():
@@ -92,6 +100,7 @@ def bon_de_livraison(request, customer_id):
     return render(request, 'management/bdl.html', context={'form': form, 'customer': customer, 'bdl': bdl})
 
 #Génère le pdf et envoie le mail
+@login_required
 def send_bdl(request, customer_id, bdl_id):
     
     customer = get_object_or_404(models.Customer, id=customer_id)
@@ -115,7 +124,8 @@ def send_bdl(request, customer_id, bdl_id):
 
     return redirect('bon_de_livraison', customer_id=customer.id)
 
-#Validation  
+#Validation
+@login_required  
 def validation(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
     customer.status = 3
@@ -123,6 +133,7 @@ def validation(request, customer_id):
     return render(request, 'management/info_customer.html', context={'customer': customer})
 
 #Retour en attelier  
+@login_required
 def retour_atelier(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
     customer.status = 2
@@ -130,6 +141,7 @@ def retour_atelier(request, customer_id):
     return render(request, 'management/info_customer.html', context={'customer': customer})
 
 #Etiquette
+@login_required
 def etiquette(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
     directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom
@@ -156,15 +168,18 @@ def etiquette(request, customer_id):
     return render(request, 'management/etiquette.html', context={'customer': customer, 'code_url': code_url})
 
 #Impression de l'étiquette
+@login_required
 def etiquette_impression(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
     return render(request, 'management/info_customer.html', context={'customer': customer})
 
 #Fonction de scanner
+@login_required
 def scanner(request):
      return redirect('dashbord')
 
 #Redirection en cas d'erreur 404
+@login_required
 def page_not_found_view(request, exception):
      return redirect('dashbord')
 

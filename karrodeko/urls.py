@@ -16,12 +16,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 import management.views
+import authentication.views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),    
     path('', management.views.dashbord, name='dashbord'),
+    path('login/', authentication.views.login_page, name='login'),
+    path('logout/', authentication.views.logout_user, name='logout'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='authentication/password_reset_done.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="authentication/password_reset_confirm.html"), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='authentication/password_reset_complete.html'), name='password_reset_complete'),      
+    path('password_reset', authentication.views.password_reset_request, name="password_reset"),
+
+    path('user/new', authentication.views.new_user_page, name='new_user_page'),
     path('customer/new', management.views.new_customer, name='new_customer'),
     path('customer/<int:customer_id>/', management.views.info_customer, name='info_customer'),
     path('customer/<int:customer_id>/edit', management.views.edit_customer, name='edit_customer'),

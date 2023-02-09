@@ -9,7 +9,6 @@ from urllib.parse import urlparse
 from django.utils import timezone
 import datetime
 import cairosvg
-from jsignature.utils import draw_signature
 from io import BytesIO
 from PIL import Image
 

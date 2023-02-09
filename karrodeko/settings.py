@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'authentication',
     'management',
-    'jsignature',
 ]
 
 MIDDLEWARE = [
@@ -138,8 +137,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR.joinpath('media/')
 
-JSIGNATURE_WIDTH = 500
-JSIGNATURE_HEIGHT = 200
 
 """ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_FILE_PATH = str(BASE_DIR.joinpath('sent_emails')) """

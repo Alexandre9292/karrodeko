@@ -5,33 +5,11 @@ import qrcode
 from django.conf import settings
 from django.urls import reverse
 import os
-from urllib.parse import urlparse
-from django.utils import timezone
-import datetime
-from io import BytesIO
-from PIL import Image
-
-from reportlab.pdfgen import canvas
-from reportlab.platypus.tables import Table
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Image
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib.colors import Color, HexColor
-
-from django.http import HttpResponse
-from django.template.loader import get_template
-from django.views import View
-from xhtml2pdf import pisa
-
-from django.http import FileResponse
 from django.template.loader import render_to_string
-import pdfkit
 
 from weasyprint import HTML
 
 from django.core.mail import EmailMessage
-from django.core.files.base import ContentFile
 
 
 #Dashbord

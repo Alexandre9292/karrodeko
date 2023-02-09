@@ -8,7 +8,6 @@ import os
 from urllib.parse import urlparse
 from django.utils import timezone
 import datetime
-import cairosvg
 from io import BytesIO
 from PIL import Image
 

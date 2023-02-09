@@ -140,3 +140,13 @@ MEDIA_ROOT = BASE_DIR.joinpath('media/')
 
 JSIGNATURE_WIDTH = 500
 JSIGNATURE_HEIGHT = 200
+
+""" EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_FILE_PATH = str(BASE_DIR.joinpath('sent_emails')) """
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'alexandre.boucher92@gmail.com'
+EMAIL_HOST_PASSWORD = 'xlhiosqdlxhbwvvp'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

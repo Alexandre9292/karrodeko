@@ -32,6 +32,9 @@ import pdfkit
 
 from weasyprint import HTML
 
+from django.core.mail import EmailMessage
+from django.core.files.base import ContentFile
+
 
 #Dashbord
 def dashbord(request):
@@ -126,6 +129,13 @@ def send_bdl(request, customer_id, bdl_id):
         os.makedirs(directory)
 
     HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(directory + '/BonDeLivraison.pdf')
+
+    #Envoie du mail
+    message = "Bonjour," + "\n\n" + "Vous trouverez ci-joint le bon de livraison, suite à votre commande chez KARRO DEKO." + "\n\n" + "Au plaisir de vous revoir" + "\n\n" + "Cordialement," + "\n\n" + "KARRO DEKO"
+    recipient_list = ["alexandre.boucher92@gmail.com"]
+    email = EmailMessage("[KARRO DEKO] Bon de livraison", message, to=recipient_list)
+    email.attach_file(directory + "/BonDeLivraison.pdf")
+    email.send()
 
     return redirect('bon_de_livraison', customer_id=customer.id)
 

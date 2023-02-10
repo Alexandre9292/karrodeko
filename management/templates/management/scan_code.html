@@ -44,7 +44,7 @@
         .popup-inner .close-btn {
             position: absolute;
             top: 16px;
-            right: 16px;    
+            right: 16px;
         }
 
         .close-btn {
@@ -52,7 +52,8 @@
             position: relative;
             border: none;
             padding: 0;
-            width: 2em; height: 2em;
+            width: 2em;
+            height: 2em;
             border-radius: 50%;
             background: transparent;
             color: #333333;
@@ -60,33 +61,38 @@
             text-indent: 100%;
             cursor: pointer;
         }
-            
+
         .close-btn:focus {
             outline: solid 0 transparent;
             box-shadow: 0 0 0 2px #ce1a2b
         }
-            
+
         .close-btn:hover {
             background: rgba(206, 26, 43, .1)
         }
-            
-        .close-btn:before, .close-btn:after {
+
+        .close-btn:before,
+        .close-btn:after {
             position: absolute;
-            top: 15%; left: calc(50% - .0625em);
-            width: .125em; height: 70%;
+            top: 15%;
+            left: calc(50% - .0625em);
+            width: .125em;
+            height: 70%;
             border-radius: .125em;
             transform: rotate(45deg);
             background: currentcolor;
             content: ''
         }
-            
-        .close-btn:after { transform: rotate(-45deg); }
+
+        .close-btn:after {
+            transform: rotate(-45deg);
+        }
 
 
-        .popup-text h2{
+        .popup-text h2 {
             color: #ce1a2b;
             text-align: left;
-            text-shadow: 0px 0px 0px rgba( 2, 2, 2, 0.23 );
+            text-shadow: 0px 0px 0px rgba(2, 2, 2, 0.23);
             font-family: inherit;
             font-weight: 100;
             font-size: 34px;
@@ -95,11 +101,11 @@
             box-sizing: border-box;
         }
 
-        .popup-text p b{
+        .popup-text p b {
             font-weight: 1000;
         }
 
-        .popup-text p{
+        .popup-text p {
             color: #333333;
             font-family: inherit;
             font-weight: 100;
@@ -162,6 +168,7 @@
 
                         if (code.data.includes("karrodeko")) {
                             location.href = code.data;
+                            //$("#popup").show();
                             alert(code.data);
                         }
                     }
@@ -192,7 +199,7 @@
     <a href="{% url 'dashbord' %}">
         <div class="arrow-back"></div>
     </a>
-    <div className="popup">
+    <div id="popup" class="popup" style="display: none;">
         <div class="popup-inner">
             <button class='close-btn' onClick=""></button>
             <div class="code-data"></div>

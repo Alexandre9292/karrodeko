@@ -12,8 +12,6 @@ from weasyprint import HTML
 
 from django.core.mail import EmailMessage
 
-import cv2
-
 
 #Dashbord
 @login_required
@@ -182,14 +180,7 @@ def etiquette_impression(request, customer_id):
 #Fonction de scanner
 @login_required
 def scanner(request):
-    # Ouvrir la caméra
-    cap = cv2.VideoCapture(0)
-    # Boucle tant que la caméra est ouverte
-    while True:
-        # Lire la prochaine image de la caméra
-        ret, frame = cap.read()
-
-    return redirect('dashbord')
+    return render(request, 'management/scan_code.html')
 
 #Redirection en cas d'erreur 404
 @login_required

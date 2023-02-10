@@ -33,14 +33,15 @@ def new_customer(request):
 #Modifier client
 @login_required
 def edit_customer(request, customer_id):
-    customer = get_object_or_404(models.Customer, id=customer_id)
+    customer = get_object_or_404(models.Customer, id=customer_id)    
+    descriptions = customer.get_description()
     form = forms.CreateCustomerForm(instance=customer)
     if request.method == 'POST':
         form = forms.CreateCustomerForm(request.POST, instance=customer)
         if form.is_valid():
             customer = form.save()
             return redirect('etiquette', customer_id=customer.id)
-    return render(request, 'management/edit_customer.html', context={'form': form, 'customer': customer})
+    return render(request, 'management/edit_customer.html', context={'form': form, 'customer': customer, 'descriptions': descriptions})
 
 #Supprimer client
 @login_required
@@ -60,12 +61,14 @@ def delete_customer_confirmation(request, customer_id):
 @login_required
 def info_customer(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
-    return render(request, 'management/info_customer.html', context={'customer': customer})
+    descriptions = customer.get_description()
+    return render(request, 'management/info_customer.html', context={'customer': customer, 'descriptions': descriptions})
 
 #Bon de commande    
 @login_required
 def bon_de_livraison(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
+    descriptions = customer.get_description()
     if models.BDL.objects.filter(customer=customer).exists():
         bdl = models.BDL.objects.filter(customer=customer)
         bdl = bdl[0]
@@ -97,7 +100,7 @@ def bon_de_livraison(request, customer_id):
             send_bdl(request, customer.id, bdl.id)
         return redirect('bon_de_livraison', customer_id=customer.id)
 
-    return render(request, 'management/bdl.html', context={'form': form, 'customer': customer, 'bdl': bdl})
+    return render(request, 'management/bdl.html', context={'form': form, 'customer': customer, 'bdl': bdl, 'descriptions': descriptions})
 
 #Génère le pdf et envoie le mail
 @login_required
@@ -105,9 +108,10 @@ def send_bdl(request, customer_id, bdl_id):
     
     customer = get_object_or_404(models.Customer, id=customer_id)
     bdl = get_object_or_404(models.BDL, id=bdl_id)
+    descriptions = customer.get_description()
 
     # Générer le HTML à partir d'une vue Django
-    html = render_to_string('management/bon_de_livraison_pdf.html', {'customer': customer, 'bdl': bdl})
+    html = render_to_string('management/bon_de_livraison_pdf.html', {'customer': customer, 'bdl': bdl, 'descriptions': descriptions})
 
     directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom
     if os.path.isdir(directory) is False :

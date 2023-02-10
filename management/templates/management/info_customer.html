@@ -37,7 +37,9 @@
             </tbody>
         </table>
         <p>Description </p>
-        <p>{{ customer.description|linebreaks }}</p>
+        {% for description in descriptions %}    
+            <p>- {{ description }}</p>
+        {% endfor %}
     </div>
 
     <div class="button-cust">

@@ -1,11 +1,27 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block css %}
+<style>
+    .add-desc {
+        background-color: #cccccc;
+        border: none;
+        padding: 5px;
+        text-align: center;
+        color: #ffffff;
+        border-radius: 10px;
+        font-size: 30px;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 
 <a href="{% url 'info_customer' customer.id %}"><div class="arrow-back"></div></a>
 
 <div class="form-cust">
-    <form method="post">
+    <form method="post" id="id-form-cust">
         <div class="form-content">
             <label for="id_nom">Nom</label>{{ form.nom }}
         </div>
@@ -19,11 +35,60 @@
             <label for="id_email">Email</label>{{ form.email }}
         </div>
         <div class="form-content">
-            <label for="id_description">Description</label>{{ form.description }}
+            <label for="id_description">Description</label>
+            <div id="list-input-desc">
+                {% for description in descriptions %}    
+                    <input type="text" name="desc_{{ forloop.counter }}" maxlength="500" id="id_desc_{{ forloop.counter }}" value="{{ description }}">
+                {% endfor %}
+            </div>
+            <div class="add-desc" id="id-add-desc">+</div>
         </div>
+        {{ form.description }}
         {% csrf_token %}
         <p class="button-form"><input type="submit" name="commit" value="Enregistrer"></p> 
     </form>
 </div>
+
+{% endblock %}
+
+
+
+{% block javascripts %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+    $(document).ready(function () {  
+        let list = document.getElementById("id_description").value.split(';');
+        let cptInput = list.length; 
+        const inputContainer = document.getElementById("list-input-desc");
+        let descList = [];
+
+        for (let i = 0; i < inputContainer.children.length; i++) {
+            descList.push(inputContainer.children[i]);
+        }
+
+        $("#id-add-desc").click(function() { 
+            cptInput++;
+            const input = document.createElement("input");
+            input.type = "text";
+            input.id = "id_desc_" + cptInput;
+            input.name = "desc_" + cptInput;
+            input.maxLength = 500;
+            inputContainer.appendChild(input);
+            descList.push(input);
+        }); 
+
+        $("#id-form-cust").submit(function() {  
+            const values = descList.map(function(input) {
+                return input.value;
+            });
+            const valueString = values.join(";");
+            $("#id_description").val(valueString);
+        }); 
+
+        $("#id_description").hide();
+    });
+</script>
 
 {% endblock %}

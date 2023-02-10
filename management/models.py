@@ -7,10 +7,13 @@ class Customer(models.Model):
     prenom = models.CharField(max_length=100, blank=True, verbose_name='Prénom')
     numero = models.CharField(max_length=100, blank=True, verbose_name='Numéro')
     email = models.EmailField(_('email address'), unique=True)
-    description = models.TextField(max_length=5000, blank=True, verbose_name='Description')
+    description = models.TextField(blank=True, verbose_name='Description')
     qr_path = models.CharField(max_length=500, blank=True)
     status = models.IntegerField(blank=True, default=1)
     signature_path = models.CharField(max_length=500, blank=True)
+
+    def get_description(self):
+        return self.description.split(';')
 
 #Class qui gère les bon de livraisons
 class BDL(models.Model):

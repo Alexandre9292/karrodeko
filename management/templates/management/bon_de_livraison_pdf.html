@@ -102,8 +102,10 @@
                 </table>
                 <br><br>
                 <div class="bdl-desc">
-                    <h2>Description</h2>
-                    <p>{{ customer.description|linebreaks }}</p>
+                    <h2>Description</h2>                    
+                    {% for description in descriptions %}    
+                        <p style="font-weight: bold;font-size: 18px;">- {{ description }}</p>
+                    {% endfor %}
                 </div>
             </div>
             <br><br>

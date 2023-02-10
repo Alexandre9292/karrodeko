@@ -1,85 +1,117 @@
-{% extends 'base.html' %}
-{% load static %}
+<html>
 
-{% block css %}
-<style>
-    .scan-code {
-        width: 100%;
-        height: 100%;
-    }
-</style>
-{% endblock %}
+<head>
+    <title>KARRO DEKO</title>
 
-{% block content %}
-
-<a href="{% url 'dashbord' %}">
-    <div class="arrow-back"></div>
-</a>
-
-<video id="preview" class="scan-code"></video>
-
-{% endblock %}
-
-{% block javascripts %}
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jsqr@1.0.0/dist/jsQR.min.js"></script>
-
-<script>
-
-    function clearSignature() {
-    }
-
-    $(document).ready(function () {
-        const video = document.getElementById('preview');
-        const canvasElement = document.createElement("canvas");
-        const canvas = canvasElement.getContext("2d");
-        let loadingMessage = document.createElement("p");
-        loadingMessage.innerText = "Loading video...";
-        document.body.appendChild(loadingMessage);
-
-        function drawLine(begin, end, color) {
-            canvas.beginPath();
-            canvas.moveTo(begin.x, begin.y);
-            canvas.lineTo(end.x, end.y);
-            canvas.lineWidth = 4;
-            canvas.strokeStyle = color;
-            canvas.stroke();
+    <style>
+        .scan-code {
+            width: 100%;
+            padding-top: 50px;
         }
 
-        // Use facingMode: environment to attemt to get the front camera on phones
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function (stream) {
-            video.srcObject = stream;
-            video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-            video.play();
-            requestAnimationFrame(tick);
-        });
+        .scan-code-border {
+            border: 1px solid black;
+        }
 
-        function tick() {
-            loadingMessage.innerText = "⌛ Loading video..."
-            if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                loadingMessage.hidden = true;
-                canvasElement.hidden = false;
-                canvasElement.height = video.videoHeight;
-                canvasElement.width = video.videoWidth;
-                canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-                let imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-                let code = jsQR(imageData.data, imageData.width, imageData.height, {
-                    inversionAttempts: "dontInvert",
-                });
-                if (code) {
-                    drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#000");
-                    drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#000");
-                    drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#000");
-                    drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#000");
-                    video.appendChild("<a class='lien-code'>" + code.data + "</a>");
-                    alert(code.data);
-                    // Do something with the code data, like send it to your server for analysis
+        #link-display {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.0.0/dist/jsQR.min.js"></script>
+
+    <script>
+
+        function clearSignature() {
+        }
+
+        $(document).ready(function () {
+            const video = document.getElementById('preview');
+            const linkDisplay = document.getElementById("link-display");
+            const canvasElement = document.createElement("canvas");
+            const canvas = canvasElement.getContext("2d");
+            let loadingMessage = document.createElement("p");
+            loadingMessage.innerText = "Loading video...";
+            document.body.appendChild(loadingMessage);
+
+            function drawLine(begin, end, color) {
+                canvas.beginPath();
+                canvas.moveTo(begin.x, begin.y);
+                canvas.lineTo(end.x, end.y);
+                canvas.lineWidth = 4;
+                canvas.strokeStyle = color;
+                canvas.stroke();
+            }
+
+            // Use facingMode: environment to attemt to get the front camera on phones
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function (stream) {
+                video.srcObject = stream;
+                video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+                toggleFullScreen();
+                video.play();
+                requestAnimationFrame(tick);
+            });
+
+            function tick() {
+                loadingMessage.innerText = "⌛ Loading video..."
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    loadingMessage.hidden = true;
+                    canvasElement.hidden = false;
+                    canvasElement.height = video.videoHeight;
+                    canvasElement.width = video.videoWidth;
+                    canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+                    let imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                    let code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        inversionAttempts: "dontInvert",
+                    });
+                    if (code) {
+                        drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#000");
+                        drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#000");
+                        drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#000");
+                        drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#000");
+
+                        if (code.data.includes("karrodeko")) {
+                            location.href = code.data;
+                            alert(code.data);
+                        }
+                    }
+                }
+                requestAnimationFrame(tick);
+            }
+
+            function toggleFullScreen() {
+                if (video.requestFullscreen) {
+                    video.requestFullscreen();
+                } else if (video.mozRequestFullScreen) {
+                    video.mozRequestFullScreen();
+                } else if (video.webkitRequestFullscreen) {
+                    video.webkitRequestFullscreen();
+                } else if (video.msRequestFullscreen) {
+                    video.msRequestFullscreen();
                 }
             }
-            requestAnimationFrame(tick);
-        }
-    });
-</script>
 
-{% endblock %}
+            $("#code-input").hide();
+        });
+    </script>
+
+</head>
+
+<body>
+
+    <a href="{% url 'dashbord' %}">
+        <div class="arrow-back"></div>
+    </a>
+    <form method="post" id="code-form">
+        <input type="text" id="code-input" name="code">
+    </form>
+    <video id="preview" class="scan-code"></video>
+    <p id="link-display"></p>
+
+</body>
+
+</html>

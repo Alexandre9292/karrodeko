@@ -1,216 +1,47 @@
-<html>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 
-<head>
-    <title>KARRO DEKO</title>
+<div id="qr-reader"></div>
 
-    <style>
-        .scan-code {
-            width: 100%;
-            padding-top: 50px;
+{% endblock %}
+
+{% block css %}
+<style>
+    .result {
+        background-color: green;
+        color: #fff;
+        padding: 20px;
+    }
+
+    .row {
+        display: flex;
+    }
+
+    #qr-reader {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block javascripts %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.0.0/dist/jsQR.min.js"></script>
+<script src="{% static 'admin/js/html5-qrcode.min.js'%}"></script>
+<script src="https://unpkg.com/html5-qrcode@2.0.9/dist/html5-qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        function onScanSuccess(decodedText, decodedResult) {
+            alert(decodedText);
         }
+        var html5QrcodeScanner = new Html5QrcodeScanner(
+            "qr-reader", { fps: 10 });
+        html5QrcodeScanner.render(onScanSuccess);
+    });
+</script>
 
-        .scan-code-border {
-            border: 1px solid black;
-        }
-
-        #link-display {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .popup {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background-color: rgba(33, 33, 33, 0.8);
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .popup-inner {
-            position: relative;
-            padding: 32px;
-            width: 100%;
-            max-width: 640px;
-            background-color: white;
-        }
-
-        .popup-inner .close-btn {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-        }
-
-        .close-btn {
-            overflow: hidden;
-            position: relative;
-            border: none;
-            padding: 0;
-            width: 2em;
-            height: 2em;
-            border-radius: 50%;
-            background: transparent;
-            color: #333333;
-            font: inherit;
-            text-indent: 100%;
-            cursor: pointer;
-        }
-
-        .close-btn:focus {
-            outline: solid 0 transparent;
-            box-shadow: 0 0 0 2px #ce1a2b
-        }
-
-        .close-btn:hover {
-            background: rgba(206, 26, 43, .1)
-        }
-
-        .close-btn:before,
-        .close-btn:after {
-            position: absolute;
-            top: 15%;
-            left: calc(50% - .0625em);
-            width: .125em;
-            height: 70%;
-            border-radius: .125em;
-            transform: rotate(45deg);
-            background: currentcolor;
-            content: ''
-        }
-
-        .close-btn:after {
-            transform: rotate(-45deg);
-        }
-
-
-        .popup-text h2 {
-            color: #ce1a2b;
-            text-align: left;
-            text-shadow: 0px 0px 0px rgba(2, 2, 2, 0.23);
-            font-family: inherit;
-            font-weight: 100;
-            font-size: 34px;
-            line-height: 36px;
-            margin-bottom: .5em;
-            box-sizing: border-box;
-        }
-
-        .popup-text p b {
-            font-weight: 1000;
-        }
-
-        .popup-text p {
-            color: #333333;
-            font-family: inherit;
-            font-weight: 100;
-            line-height: 30px;
-        }
-    </style>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.0.0/dist/jsQR.min.js"></script>
-
-    <script>
-
-        function clearSignature() {
-        }
-
-        $(document).ready(function () {
-            const video = document.getElementById('preview');
-            const linkDisplay = document.getElementById("link-display");
-            const canvasElement = document.createElement("canvas");
-            const canvas = canvasElement.getContext("2d");
-            let loadingMessage = document.createElement("p");
-            loadingMessage.innerText = "Loading video...";
-            document.body.appendChild(loadingMessage);
-
-            function drawLine(begin, end, color) {
-                canvas.beginPath();
-                canvas.moveTo(begin.x, begin.y);
-                canvas.lineTo(end.x, end.y);
-                canvas.lineWidth = 4;
-                canvas.strokeStyle = color;
-                canvas.stroke();
-            }
-
-            // Use facingMode: environment to attemt to get the front camera on phones
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function (stream) {
-                video.srcObject = stream;
-                video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-                toggleFullScreen();
-                video.play();
-                requestAnimationFrame(tick);
-            });
-
-            function tick() {
-                loadingMessage.innerText = "⌛ Loading video..."
-                if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                    loadingMessage.hidden = true;
-                    canvasElement.hidden = false;
-                    canvasElement.height = video.videoHeight;
-                    canvasElement.width = video.videoWidth;
-                    canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-                    let imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-                    let code = jsQR(imageData.data, imageData.width, imageData.height, {
-                        inversionAttempts: "dontInvert",
-                    });
-                    if (code) {
-                        drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#000");
-                        drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#000");
-                        drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#000");
-                        drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#000");
-
-                        if (code.data.includes("karrodeko")) {
-                            location.href = code.data;
-                            //$("#popup").show();
-                            alert(code.data);
-                        }
-                    }
-                }
-                requestAnimationFrame(tick);
-            }
-
-            function toggleFullScreen() {
-                if (video.requestFullscreen) {
-                    video.requestFullscreen();
-                } else if (video.mozRequestFullScreen) {
-                    video.mozRequestFullScreen();
-                } else if (video.webkitRequestFullscreen) {
-                    video.webkitRequestFullscreen();
-                } else if (video.msRequestFullscreen) {
-                    video.msRequestFullscreen();
-                }
-            }
-
-            $("#code-input").hide();
-        });
-    </script>
-
-</head>
-
-<body>
-
-    <a href="{% url 'dashbord' %}">
-        <div class="arrow-back"></div>
-    </a>
-    <div id="popup" class="popup" style="display: none;">
-        <div class="popup-inner">
-            <button class='close-btn' onClick=""></button>
-            <div class="code-data"></div>
-        </div>
-    </div>
-    <form method="post" id="code-form">
-        <input type="text" id="code-input" name="code">
-    </form>
-    <video id="preview" class="scan-code"></video>
-    <p id="link-display"></p>
-
-</body>
-
-</html>
+{% endblock %}

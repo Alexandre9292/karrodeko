@@ -1,47 +1,84 @@
-{% extends 'base.html' %}
 {% load static %}
-{% block content %}
+<html>
 
-<div id="qr-reader"></div>
+<head>
+    <title>KARRO DEKO</title>
 
-{% endblock %}
-
-{% block css %}
-<style>
-    .result {
-        background-color: green;
-        color: #fff;
-        padding: 20px;
-    }
-
-    .row {
-        display: flex;
-    }
-
-    #qr-reader {
-        width: 100%;
-        height: 100%;
-    }
-</style>
-{% endblock %}
-
-{% block javascripts %}
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jsqr@1.0.0/dist/jsQR.min.js"></script>
-<script src="{% static 'admin/js/html5-qrcode.min.js'%}"></script>
-<script src="https://unpkg.com/html5-qrcode@2.0.9/dist/html5-qrcode.min.js"></script>
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        function onScanSuccess(decodedText, decodedResult) {
-            alert(decodedText);
+    <style>
+        .result {
+            background-color: green;
+            color: #fff;
+            padding: 20px;
         }
-        var html5QrcodeScanner = new Html5QrcodeScanner(
-            "qr-reader", { fps: 10 });
-        html5QrcodeScanner.render(onScanSuccess);
-    });
-</script>
 
-{% endblock %}
+        .row {
+            display: flex;
+        }
+
+        #qr-reader__dashboard_section_swaplink {
+            display: none;
+        }
+
+        #html5-qrcode-button-camera-start {
+            display: none;
+        }
+    </style>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.0.0/dist/jsQR.min.js"></script>
+    <script src="{% static 'admin/js/html5-qrcode.min.js'%}"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.0.9/dist/html5-qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function onScanSuccess(decodedText, decodedResult) {
+                if (decodedText.includes("karrodeko")) {
+                    location.href = decodedText;
+                    alert(decodedText);
+                }
+            }
+            var html5QrcodeScanner = new Html5QrcodeScanner(
+                "qr-reader", { fps: 10, qrbox: 750, rememberLastUsedCamera: true });
+            html5QrcodeScanner.render(onScanSuccess);
+
+            var qrReader = document.getElementById("qr-reader");
+            qrReader.children[0].style.display = 'none';
+
+
+            var qrReaderButton = document.getElementById("qr-reader__dashboard_section_csr");
+            qrReaderButton.style.display = "none";
+            var button = qrReaderButton.children[0].querySelector('button');
+            button.click();
+
+            setTimeout(function () {
+                if (qrReaderButton.children[1]) {
+                    var qrSelect = qrReaderButton.children[0].querySelector('select');
+                    if (qrSelect) {
+                        for (var i = 0; i < qrSelect.options.length; i++) { // Parcourt toutes les options du select
+                            if (qrSelect.options[i].text.indexOf('back') !== -1) { // Vérifie si le texte de l'option contient "oui"
+                                qrSelect.selectedIndex = i; // Sélectionne l'option correspondante
+                                break; // Sort de la boucle for une fois que l'option est trouvée
+                            }
+                        }
+                    }
+
+                    var button = qrReaderButton.children[1].querySelector('button'); // Sélectionne le bouton à cliquer
+                    button.click();
+                }
+            }, 500);
+
+        });
+    </script>
+
+</head>
+
+<body>
+
+
+    <div id="qr-reader"></div>
+
+</body>
+
+</html>

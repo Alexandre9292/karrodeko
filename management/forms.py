@@ -9,4 +9,5 @@ class CreateCustomerForm(forms.ModelForm):
 
 #Formulaire de création d'un bon de livraison
 class CreateSignatureForm(forms.Form):
-    signature = forms.CharField(max_length = 1000, label='signature')
+    signature_client = forms.CharField(max_length = 1000, label='Signature Client')
+    signature_KD = forms.CharField(max_length = 1000, label='Signature KARRO DEKO')

@@ -38,6 +38,7 @@ urlpatterns = [
     path('customer/<int:customer_id>/delete', management.views.delete_customer, name='delete_customer'),
     path('customer/<int:customer_id>/delete-confirmation', management.views.delete_customer_confirmation, name='delete_customer_confirmation'),
     path('customer/<int:customer_id>/BDL', management.views.bon_de_livraison, name='bon_de_livraison'),
+    path('customer/<int:customer_id>/en_cours', management.views.en_cours, name='en_cours'),
     path('customer/<int:customer_id>/validation', management.views.validation, name='validation'),
     path('customer/<int:customer_id>/retour-atelier', management.views.retour_atelier, name='retour_atelier'),
     path('customer/<int:customer_id>/etiquette', management.views.etiquette, name='etiquette'),

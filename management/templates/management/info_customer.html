@@ -46,9 +46,13 @@
         <a class="button-element" href="{% url 'edit_customer' customer.id %}">
                 <span>Modifier</span>
         </a>
-        {% if customer.status < 3  %}
+        {% if customer.status == 2  %}
             <a class="button-element" href="{% url 'validation' customer.id %}">
                     <span>Valider</span>
+            </a>
+        {% elif customer.status == 1 %}
+            <a class="button-element" href="{% url 'en_cours' customer.id %}">
+                    <span>En atelier</span>
             </a>
         {% else %}
             <a class="button-element" href="{% url 'retour_atelier' customer.id %}">

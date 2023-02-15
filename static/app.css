@@ -598,7 +598,7 @@ input[type=text], input[type=password] {
 
  .info-bdl {
     width: 21cm;
-    height: 29.7cm;
+    min-height: 29.7cm;
     box-sizing : border-box;
     border-radius:15px;
     border: solid #830000;
@@ -638,7 +638,7 @@ input[type=text], input[type=password] {
     text-align: center;
  }
 
- #clearCanvas {
+ .clearCanvas {
     text-align: center;
     padding: 4px 25px;
     margin-top: 25px;    
@@ -649,7 +649,7 @@ input[type=text], input[type=password] {
     color: #FFFFFF;
  }
 
- #signature{
+ .signature-cadre {
     margin-bottom: 20px;
     width: 75%;
     margin-left: auto;
@@ -666,6 +666,13 @@ input[type=text], input[type=password] {
  }
 
  .signature-img-cont {
+    width: 100%;
+ }
+
+ .signature-zone {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    text-align: center;
     width: 100%;
  }
 

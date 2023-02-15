@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from weasyprint import HTML
 
 from django.core.mail import EmailMessage
+import shutil
 
 
 #Dashbord
@@ -47,6 +48,9 @@ def edit_customer(request, customer_id):
 @login_required
 def delete_customer(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
+    directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom
+    if os.path.exists(directory):
+        shutil.rmtree(directory)
     customer.delete()
     customers = models.Customer.objects.all()
     return render(request, 'management/dashbord.html', context={'list_customer': customers})
@@ -79,23 +83,37 @@ def bon_de_livraison(request, customer_id):
     form = forms.CreateSignatureForm()
     if request.method == 'POST':
         form = forms.CreateSignatureForm(request.POST)
-        fichier = '/signature.png';            
+        fichierC = '/signature_client.png';    
+        fichierK = '/signature_KD.png';               
         directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom 
-        signature = request.POST['signature']
-        if signature:            
-            if os.path.isdir(directory) is False :
-                os.makedirs(directory)
+                
+        if os.path.isdir(directory) is False :
+            os.makedirs(directory)
 
-            # enregistrer le fichier PNG
-            image_sign = open(directory + fichier, 'w')
-            with open(directory + fichier, "wb") as f:
-                f.write(base64.b64decode(signature.split(",")[1]))
-            image_sign.close()
+        signatureC = request.POST['signature_client']
+        signatureK = request.POST['signature_KD']
+        if signatureC or signatureK:    
+            if signatureC and os.path.isfile(os.path.join(directory, fichierC)) is False :
+                # enregistrer le fichier PNG
+                image_sign = open(directory + fichierC, 'w')
+                with open(directory + fichierC, "wb") as f:
+                    f.write(base64.b64decode(signatureC.split(",")[1]))
+                image_sign.close()
+                
+                customer.signature_client_path = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + fichierC                
+                bdl.is_signed_client = True
+            if signatureK and os.path.isfile(os.path.join(directory, fichierK)) is False :
+                # enregistrer le fichier PNG
+                image_sign = open(directory + fichierK, 'w')
+                with open(directory + fichierK, "wb") as f:
+                    f.write(base64.b64decode(signatureK.split(",")[1]))
+                image_sign.close()
+                
+                customer.signature_KD_path = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + fichierK                
+                bdl.is_signed_KD = True
 
-            customer.signature_path = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + fichier
             customer.status = 4
             customer.save() 
-            bdl.is_signed = True
             bdl.save()
             send_bdl(request, customer.id, bdl.id)
         return redirect('bon_de_livraison', customer_id=customer.id)
@@ -119,14 +137,25 @@ def send_bdl(request, customer_id, bdl_id):
 
     HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(directory + '/BonDeLivraison.pdf')
 
-    #Envoie du mail
-    message = "Bonjour," + "\n\n" + "Vous trouverez ci-joint le bon de livraison, suite à votre commande chez KARRO DEKO." + "\n\n" + "Au plaisir de vous revoir" + "\n\n" + "Cordialement," + "\n\n" + "KARRO DEKO"
-    recipient_list = ["alexandre.boucher92@gmail.com"]
-    email = EmailMessage("[KARRO DEKO] Bon de livraison", message, to=recipient_list)
-    email.attach_file(directory + "/BonDeLivraison.pdf")
-    email.send()
+    
+    if os.path.isfile(directory + '/signature_client.png') and os.path.isfile(directory + '/signature_KD.png') : 
+        #Envoie du mail
+        message = "Bonjour," + "\n\n" + "Vous trouverez ci-joint le bon de livraison, suite à votre commande chez KARRO DEKO." + "\n\n" + "Au plaisir de vous revoir" + "\n\n" + "Cordialement," + "\n\n" + "KARRO DEKO"
+        recipient_list = ["alexandre.boucher92@gmail.com"]
+        email = EmailMessage("[KARRO DEKO] Bon de livraison", message, to=recipient_list)
+        email.attach_file(directory + "/BonDeLivraison.pdf")
+        email.send()
 
     return redirect('bon_de_livraison', customer_id=customer.id)
+
+#Validation
+@login_required  
+def en_cours(request, customer_id):
+    customer = get_object_or_404(models.Customer, id=customer_id)
+    customer.status = 2
+    customer.save()
+    descriptions = customer.get_description()
+    return render(request, 'management/info_customer.html', context={'customer': customer, 'descriptions': descriptions})
 
 #Validation
 @login_required  
@@ -134,7 +163,8 @@ def validation(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
     customer.status = 3
     customer.save()
-    return render(request, 'management/info_customer.html', context={'customer': customer})
+    descriptions = customer.get_description()
+    return render(request, 'management/info_customer.html', context={'customer': customer, 'descriptions': descriptions})
 
 #Retour en attelier  
 @login_required
@@ -142,7 +172,8 @@ def retour_atelier(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
     customer.status = 2
     customer.save()
-    return render(request, 'management/info_customer.html', context={'customer': customer})
+    descriptions = customer.get_description()
+    return render(request, 'management/info_customer.html', context={'customer': customer, 'descriptions': descriptions})
 
 #Etiquette
 @login_required

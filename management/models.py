@@ -10,7 +10,8 @@ class Customer(models.Model):
     description = models.TextField(blank=True, verbose_name='Description')
     qr_path = models.CharField(max_length=500, blank=True)
     status = models.IntegerField(blank=True, default=1)
-    signature_path = models.CharField(max_length=500, blank=True)
+    signature_client_path = models.CharField(max_length=500, blank=True)
+    signature_KD_path = models.CharField(max_length=500, blank=True)
 
     def get_description(self):
         return self.description.split(';')
@@ -19,4 +20,5 @@ class Customer(models.Model):
 class BDL(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     date_livraison = models.DateTimeField(auto_now_add=True)
-    is_signed = models.BooleanField(default=False)
+    is_signed_client = models.BooleanField(default=False)
+    is_signed_KD = models.BooleanField(default=False)

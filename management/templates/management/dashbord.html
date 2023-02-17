@@ -14,8 +14,10 @@
             </a>
         </div>
     </div>
+    <br><br>
 
     <div class="tab-list tableau-dash">
+        <input id="searchbar" onkeyup="recherche()" type="text" name="search" placeholder="Recherche...">
         <table>
             <thead>
                 <tr class="ext_tab_title">
@@ -27,7 +29,7 @@
             </thead>
             <tbody>                 
                 {% for customer in list_customer %}
-                    <tr>
+                    <tr class="searchable">
                         <td>{% if customer.status == 1  %}<a href="{% url 'info_customer' customer.id %}" style="background: #830000; color: #FFFFFF;">{{ customer.nom }} {{ customer.prenom }}</a>{% endif %}</td>
                         <td>{% if customer.status == 2  %}<a href="{% url 'info_customer' customer.id %}" style="background: #ffe70f; color: #000000;">{{ customer.nom }} {{ customer.prenom }} <br> <span style="color: #830000;font-size: 16;">Atelier granite</span></a>{% endif %}  
                         {% if customer.status == 3  %}<a href="{% url 'info_customer' customer.id %}" style="background: #ffe70f; color: #000000;">{{ customer.nom }} {{ customer.prenom }} <br> <span style="color: #830000;font-size: 16;">Atelier plinthe</span></a>{% endif %}</td>                          
@@ -39,3 +41,40 @@
         </table>
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        function recherche() {
+            let input = document.getElementById('searchbar').value;
+            input = input.toLowerCase();
+            let vam = document.getElementsByClassName('searchable');
+        
+            for (i = 0; i < vam.length; i ++) {
+                if (! vam[i].innerHTML.toLowerCase().includes(input)) {
+                    vam[i].style.display = "none";
+                } else {
+                    vam[i].style.display = "";
+                }
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block css %}
+    <style>
+        #searchbar {
+            width: 50%;
+        }
+
+        @media (max-width: 1500px) {
+            #searchbar {
+                width: 100%;
+            }
+        }
+    </style>
+{% endblock %}
+
+
+

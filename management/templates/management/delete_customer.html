@@ -6,12 +6,16 @@
         {% csrf_token %}
 
         <div class="info-delete-submit">
-            <div class="info-delete-button">
-                <a href="{% url 'delete_customer' customer.id  %}">Oui</a>
-            </div>
-            <div class="info-delete-button">
-                <a href="{% url 'info_customer' customer.id  %}">Non</a>
-            </div>
+            <a href="{% url 'delete_customer' customer.id  %}">
+              <div class="info-delete-button">
+                Oui
+              </div>
+            </a>
+            <a href="{% url 'info_customer' customer.id  %}">
+              <div class="info-delete-button">
+                Non
+              </div>
+            </a>
         </div> 
     </form>
   </div>

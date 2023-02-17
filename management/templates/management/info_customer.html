@@ -8,8 +8,10 @@
         {% if customer.status == 1 %}
             <p style="background: #830000; color: #FFFFFF;">En attente</p>
         {% elif customer.status == 2 %}
-            <p style="background: #ffe70f; color: #000000;">En Cours</p>
+            <p style="background: #ffe70f; color: #000000;">En Cours - Atelier granite</p>
         {% elif customer.status == 3 %}
+            <p style="background: #ffe70f; color: #000000;">En Cours - Atelier plinthe</p>
+        {% elif customer.status == 4 %}
             <p style="background: #008325; color: #000000;">Terminé</p>
         {% else %}
             <p style="background: #000d83; color: #FFFFFF;">Livré</p>
@@ -51,8 +53,11 @@
                     <span>Valider</span>
             </a>
         {% elif customer.status == 1 %}
-            <a class="button-element" href="{% url 'en_cours' customer.id %}">
-                    <span>En atelier</span>
+            <a class="button-element" href="{% url 'en_cours' customer.id 2 %}">
+                <span>Atelier granite</span>
+            </a>
+            <a class="button-element" href="{% url 'en_cours' customer.id 3 %}">
+                <span>Atelier plinthe</span>
             </a>
         {% else %}
             <a class="button-element" href="{% url 'retour_atelier' customer.id %}">

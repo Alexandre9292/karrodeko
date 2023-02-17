@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required, permission_required
 
 from weasyprint import HTML
+from datetime import date
 
 from django.core.mail import EmailMessage
 import shutil
@@ -17,7 +18,7 @@ import shutil
 #Dashbord
 @login_required
 def dashbord(request):
-    customers = models.Customer.objects.all()
+    customers = models.Customer.objects.all().order_by('-id')
     return render(request, 'management/dashbord.html', context={'list_customer': customers})
 
 #Nouveau client
@@ -28,8 +29,31 @@ def new_customer(request):
         form = forms.CreateCustomerForm(request.POST)
         if form.is_valid():
             customer = form.save()
+
+            fichier = '/signature_client_commande.png';               
+            directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom 
+                    
+            if os.path.isdir(directory) is False :
+                os.makedirs(directory)
+
+            signatureC = request.POST['signature_client_commande']
+            if signatureC and os.path.isfile(os.path.join(directory, fichier)) is False :
+                # enregistrer le fichier PNG
+                image_sign = open(directory + fichier, 'w')
+                with open(directory + fichier, "wb") as f:
+                    f.write(base64.b64decode(signatureC.split(",")[1]))
+                image_sign.close()
+                
+                customer.signature_client_commande_path = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + fichier  
+
+                customer.is_signed_commande = True
+                customer.status = 1
+                customer.save()
+        
+            
             return redirect('etiquette', customer_id=customer.id)
-    return render(request, 'management/new_customer.html', context={'form': form})
+
+    return render(request, 'management/new_customer.html', context={'form': form, 'date': date.today()})
 
 #Modifier client
 @login_required
@@ -41,7 +65,29 @@ def edit_customer(request, customer_id):
         form = forms.CreateCustomerForm(request.POST, instance=customer)
         if form.is_valid():
             customer = form.save()
+
+            fichier = '/signature_client_commande.png';               
+            directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom 
+                    
+            if os.path.isdir(directory) is False :
+                os.makedirs(directory)
+
+            signatureC = request.POST['signature_client_commande']
+            if signatureC and os.path.isfile(os.path.join(directory, fichier)) is False :
+                # enregistrer le fichier PNG
+                image_sign = open(directory + fichier, 'w')
+                with open(directory + fichier, "wb") as f:
+                    f.write(base64.b64decode(signatureC.split(",")[1]))
+                image_sign.close()
+                
+                customer.signature_client_commande_path = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + fichier  
+
+                customer.is_signed_commande = True
+                customer.save()
+        
+            
             return redirect('etiquette', customer_id=customer.id)
+        
     return render(request, 'management/edit_customer.html', context={'form': form, 'customer': customer, 'descriptions': descriptions})
 
 #Supprimer client
@@ -52,7 +98,7 @@ def delete_customer(request, customer_id):
     if os.path.exists(directory):
         shutil.rmtree(directory)
     customer.delete()
-    customers = models.Customer.objects.all()
+    customers = models.Customer.objects.all().order_by('-id')
     return render(request, 'management/dashbord.html', context={'list_customer': customers})
 
 #Confirmation de suppression client
@@ -150,9 +196,9 @@ def send_bdl(request, customer_id, bdl_id):
 
 #Validation
 @login_required  
-def en_cours(request, customer_id):
+def en_cours(request, customer_id, statut):
     customer = get_object_or_404(models.Customer, id=customer_id)
-    customer.status = 2
+    customer.status = statut
     customer.save()
     descriptions = customer.get_description()
     return render(request, 'management/info_customer.html', context={'customer': customer, 'descriptions': descriptions})
@@ -161,7 +207,7 @@ def en_cours(request, customer_id):
 @login_required  
 def validation(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
-    customer.status = 3
+    customer.status = 4
     customer.save()
     descriptions = customer.get_description()
     return render(request, 'management/info_customer.html', context={'customer': customer, 'descriptions': descriptions})
@@ -170,7 +216,7 @@ def validation(request, customer_id):
 @login_required
 def retour_atelier(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
-    customer.status = 2
+    customer.status = 1
     customer.save()
     descriptions = customer.get_description()
     return render(request, 'management/info_customer.html', context={'customer': customer, 'descriptions': descriptions})
@@ -183,6 +229,8 @@ def etiquette(request, customer_id):
 
     if os.path.isdir(directory) is False :
         os.makedirs(directory)
+    
+    if os.path.isfile(os.path.join(directory, "/code.jpg")) is False :
         url = request.build_absolute_uri(reverse("info_customer", args=[customer_id]))
         qr = qrcode.QRCode(
             version=1,

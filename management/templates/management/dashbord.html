@@ -29,9 +29,10 @@
                 {% for customer in list_customer %}
                     <tr>
                         <td>{% if customer.status == 1  %}<a href="{% url 'info_customer' customer.id %}" style="background: #830000; color: #FFFFFF;">{{ customer.nom }} {{ customer.prenom }}</a>{% endif %}</td>
-                        <td>{% if customer.status == 2  %}<a href="{% url 'info_customer' customer.id %}" style="background: #ffe70f; color: #000000;">{{ customer.nom }} {{ customer.prenom }}</a>{% endif %}</td>  
-                        <td>{% if customer.status == 3  %}<a href="{% url 'info_customer' customer.id %}" style="background: #008325; color: #000000;">{{ customer.nom }} {{ customer.prenom }}</a>{% endif %}</td>               
-                        <td>{% if customer.status == 4  %}<a href="{% url 'info_customer' customer.id %}" style="background: #000d83; color: #FFFFFF;">{{ customer.nom }} {{ customer.prenom }}</a>{% endif %}</td>
+                        <td>{% if customer.status == 2  %}<a href="{% url 'info_customer' customer.id %}" style="background: #ffe70f; color: #000000;">{{ customer.nom }} {{ customer.prenom }} <br> <span style="color: #830000;font-size: 16;">Atelier granite</span></a>{% endif %}  
+                        {% if customer.status == 3  %}<a href="{% url 'info_customer' customer.id %}" style="background: #ffe70f; color: #000000;">{{ customer.nom }} {{ customer.prenom }} <br> <span style="color: #830000;font-size: 16;">Atelier plinthe</span></a>{% endif %}</td>                          
+                        <td>{% if customer.status == 4  %}<a href="{% url 'info_customer' customer.id %}" style="background: #008325; color: #000000;">{{ customer.nom }} {{ customer.prenom }}</a>{% endif %}</td>               
+                        <td>{% if customer.status == 5  %}<a href="{% url 'info_customer' customer.id %}" style="background: #000d83; color: #FFFFFF;">{{ customer.nom }} {{ customer.prenom }}</a>{% endif %}</td>
                     </tr>                     
                 {% endfor %} 
             </tbody>

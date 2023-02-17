@@ -42,6 +42,17 @@
             <div class="add-desc" id="id-add-desc">+</div>
         </div>
         {{ form.description }}
+        <br><br>
+        <div class="signature">
+            <label>Date: </label>{{ date|date:"d-m-Y" }}   
+            <br><br>
+            <label>Signature Client: </label>
+            <div class="bdl-signature">
+                <div class="signature-cadre"  id="signatureC"></div>
+                <a class="clearCanvas" id="clearCanvasC" onclick="clearSignatureC()" >Effacer</a>
+            </div>         
+        </div>
+        <input type="text" name="signature_client_commande" maxlength="1000" id="id_signature_client_commande" style="display: none;">
         {% csrf_token %}
         <p class="button-form"><input type="submit" name="commit" value="Enregistrer"></p> 
     </form>
@@ -52,7 +63,13 @@
 {% block javascripts %}
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'admin/js/flashcanvas.js'%}"></script>
+<script src="{% static 'admin/js/jSignature.min.js'%}"></script>
 <script>
+
+    function clearSignatureC() {
+        $("#signatureC").jSignature("reset");
+    }
 
     $(document).ready(function () {  
         let cptInput = 1; 
@@ -71,14 +88,25 @@
             descList.push(input);
         }); 
 
+        var signatureC = $("#signatureC").jSignature({ 
+            'color': '#000000',
+            'background-color': '#ffffff',
+            'decor-color': '#d0e3f0'
+        });
+
         $("#id-form-cust").submit(function() {  
             const values = descList.map(function(input) {
                 return input.value;
             });
             const valueString = values.join(";");
             $("#id_description").val(valueString);
+
+
+            var signature_C_data = $('#signatureC').jSignature('getData', 'image');
+            $("#id_signature_client_commande").val(signature_C_data);
         }); 
 
+        
         $("#id_description").hide();
     });
 </script>

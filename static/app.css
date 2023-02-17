@@ -354,13 +354,23 @@ input[type=text], input[type=password] {
 }
 
 .tab-list a  {
-    font-family: 'Lucida Grande', Tahoma, Verdana, sans-serif;
+   /*  font-family: 'Lucida Grande', Tahoma, Verdana, sans-serif;
     text-align: center;
     padding: 1px 25px;
     margin-top: 25px;    
     border: 1px solid;
     border-radius: 16px;
-    outline: 0;
+    outline: 0; */
+
+    font-family: 'Lucida Grande', Tahoma, Verdana, sans-serif;
+    border-radius: 20px;
+    border: 1px solid;
+    padding: 10px 20px; 
+    text-align: center; 
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    font-size: 20;
 }
 
 @media (min-width: 1500px) {

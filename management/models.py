@@ -12,6 +12,9 @@ class Customer(models.Model):
     status = models.IntegerField(blank=True, default=1)
     signature_client_path = models.CharField(max_length=500, blank=True)
     signature_KD_path = models.CharField(max_length=500, blank=True)
+    signature_client_commande_path = models.CharField(max_length=500, blank=True)
+    date_commande = models.DateTimeField(auto_now_add=True, null=True)
+    is_signed_commande = models.BooleanField(default=False)
 
     def get_description(self):
         return self.description.split(';')

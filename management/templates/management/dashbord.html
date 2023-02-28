@@ -39,6 +39,43 @@
                 {% endfor %} 
             </tbody>
         </table>
+
+        <div class="cards-dash">
+            {% for customer in list_customer %}
+                {% if customer.status == 1  %}
+                    <a href="{% url 'info_customer' customer.id %}" class="card-dash searchable" style="background: #830000; color: #FFFFFF; margin-top: 15px;">
+                        <h2>{{ customer.nom }} {{ customer.prenom }}</h2>
+                        <p>En attente</p>
+                    </a>
+                {% endif %}
+                {% if customer.status == 2  %}
+                    <a href="{% url 'info_customer' customer.id %}" class="card-dash searchable" style="background: #ffe70f; color: #000000; margin-top: 15px;">
+                        <h2>{{ customer.nom }} {{ customer.prenom }}</h2>
+                        <p>En cours</p>
+                        <p style="color: #830000;font-size: 16;"></p>>Atelier granite</p>
+                    </a>
+                {% endif %}
+                {% if customer.status == 3  %}
+                    <a href="{% url 'info_customer' customer.id %}" class="card-dash searchable" style="background: #ffe70f; color: #000000; margin-top: 15px;">
+                        <h2>{{ customer.nom }} {{ customer.prenom }}</h2>                
+                        <p>En cours</p>
+                        <p style="color: #830000;font-size: 16;">Atelier plinthe</p>
+                    </a>
+                {% endif %}
+                {% if customer.status == 4  %}
+                    <a href="{% url 'info_customer' customer.id %}" class="card-dash searchable" style="background: #008325; color: #000000; margin-top: 15px;">
+                        <h2>{{ customer.nom }} {{ customer.prenom }}</h2>
+                        <p>Terminé</p>
+                    </a>
+                {% endif %}
+                {% if customer.status == 5  %}
+                    <a href="{% url 'info_customer' customer.id %}" class="card-dash searchable" style="background: #000d83; color: #FFFFFF;">
+                        <h2>{{ customer.nom }} {{ customer.prenom }}</h2>
+                        <p>Livré</p>
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
 

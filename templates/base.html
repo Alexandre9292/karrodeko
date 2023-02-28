@@ -12,6 +12,21 @@
 
         {% endblock css %}
 
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script>
+            $(document).ready(function () {   
+                var menuLien = document.querySelector('.menu-lien');
+                $("#menu-button").click(function() {
+                    if(menuLien.style.display == "block"){
+                        menuLien.style.display="none";
+                    }else{
+                        menuLien.style.display="block";
+                    }          
+                }); 
+            });
+        </script>
+
         {% block javascripts %}
 
         {% endblock javascripts %}
@@ -23,14 +38,23 @@
                     <img class="logo" src="{% static 'images/logo.jpg'%}">  
                 </a> 
             </div>
+            <div id="menu-button" class="menu-button">
+                <img class="menu-icone" src="{% static 'images/menu.png'%}">  
+            </div> 
             {%  if user.is_authenticated %}
                 <div class="login-button">
                     <a href="{% url 'logout' %}">Se déconnecter</a>
                 </div>
+                <ul class="menu-lien">
+                    <li><a href="{% url 'logout' %}">Se déconnecter</a></li>
+                </ul>
             {%  else %}
                 <div class="login-button">
                     <a href="{% url 'login' %}">Se connecter</a>
                 </div>
+                <ul class="menu-lien">
+                    <li><a href="{% url 'login' %}">Se connecter</a></li>
+                </ul>
             {% endif %}
         </header>                
         <div class="separator-header"></div>

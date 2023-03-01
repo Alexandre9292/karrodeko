@@ -23,8 +23,9 @@
                 <tr class="ext_tab_title">
                     <th>En attente</th>
                     <th>En cours</th>
+                    <th>A récupéré</th>
+                    <th>A livré</th>
                     <th>Terminé</th>
-                    <th>Livré</th>
                 </tr>
             </thead>
             <tbody>                 
@@ -33,8 +34,9 @@
                         <td>{% if customer.status == 1  %}<a href="{% url 'info_customer' customer.id %}" style="background: #830000; color: #FFFFFF;">{{ customer.nom }} {{ customer.prenom }}</a>{% endif %}</td>
                         <td>{% if customer.status == 2  %}<a href="{% url 'info_customer' customer.id %}" style="background: #ffe70f; color: #000000;">{{ customer.nom }} {{ customer.prenom }} <br> <span style="color: #830000;font-size: 16;">Atelier granite</span></a>{% endif %}  
                         {% if customer.status == 3  %}<a href="{% url 'info_customer' customer.id %}" style="background: #ffe70f; color: #000000;">{{ customer.nom }} {{ customer.prenom }} <br> <span style="color: #830000;font-size: 16;">Atelier plinthe</span></a>{% endif %}</td>                          
-                        <td>{% if customer.status == 4  %}<a href="{% url 'info_customer' customer.id %}" style="background: #008325; color: #000000;">{{ customer.nom }} {{ customer.prenom }}</a>{% endif %}</td>               
-                        <td>{% if customer.status == 5  %}<a href="{% url 'info_customer' customer.id %}" style="background: #000d83; color: #FFFFFF;">{{ customer.nom }} {{ customer.prenom }}</a>{% endif %}</td>
+                        <td>{% if customer.status == 4  %}<a href="{% url 'info_customer' customer.id %}" style="background: #008325; color: #000000;">{{ customer.nom }} {{ customer.prenom }}</a>{% endif %}</td>                      
+                        <td>{% if customer.status == 5  %}<a href="{% url 'info_customer' customer.id %}" style="background: #008325; color: #000000;">{{ customer.nom }} {{ customer.prenom }}</a>{% endif %}</td>                             
+                        <td>{% if customer.status == 6  %}<a href="{% url 'info_customer' customer.id %}" style="background: #000d83; color: #FFFFFF;">{{ customer.nom }} {{ customer.prenom }}</a>{% endif %}</td>
                     </tr>                     
                 {% endfor %} 
             </tbody>
@@ -65,10 +67,16 @@
                 {% if customer.status == 4  %}
                     <a href="{% url 'info_customer' customer.id %}" class="card-dash searchable" style="background: #008325; color: #000000; margin-top: 15px;">
                         <h2>{{ customer.nom }} {{ customer.prenom }}</h2>
-                        <p>Terminé</p>
+                        <p>A récupéré</p>
                     </a>
                 {% endif %}
                 {% if customer.status == 5  %}
+                    <a href="{% url 'info_customer' customer.id %}" class="card-dash searchable" style="background: #008325; color: #000000; margin-top: 15px;">
+                        <h2>{{ customer.nom }} {{ customer.prenom }}</h2>
+                        <p>A livré</p>
+                    </a>
+                {% endif %}
+                {% if customer.status == 6  %}
                     <a href="{% url 'info_customer' customer.id %}" class="card-dash searchable" style="background: #000d83; color: #FFFFFF;">
                         <h2>{{ customer.nom }} {{ customer.prenom }}</h2>
                         <p>Livré</p>

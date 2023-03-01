@@ -214,7 +214,10 @@ def en_cours(request, customer_id, statut):
 @login_required  
 def validation(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
-    customer.status = models.TERMINE
+    if customer.to_deliver :
+        customer.status = models.A_LIVRE
+    else :
+        customer.status = models.A_RECUPERER
     customer.save()
     descriptions = customer.get_description()
     return render(request, 'management/info_customer.html', context={'customer': customer, 'descriptions': descriptions})

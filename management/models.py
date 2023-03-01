@@ -5,8 +5,8 @@ from django.utils.translation import gettext_lazy  as _
 EN_ATTENTE = 1
 EN_COURS_GRANITE = 2
 EN_COURS_PLINTHE = 3
-A_LIVRE = 4
-A_RECUPERER = 5
+A_RECUPERER = 4
+A_LIVRE = 5
 TERMINE = 6
 
 #Class qui gère les clients

@@ -14,9 +14,11 @@
     {% elif customer.status == 3 %}
     <p style="background: #ffe70f; color: #000000;">En Cours - Atelier plinthe</p>
     {% elif customer.status == 4 %}
-    <p style="background: #008325; color: #000000;">Terminé</p>
+    <p style="background: #008325; color: #000000;">A récupéré</p>
+    {% elif customer.status == 5 %}
+    <p style="background: #008325; color: #000000;">A livré</p>
     {% else %}
-    <p style="background: #000d83; color: #FFFFFF;">Livré</p>
+    <p style="background: #000d83; color: #FFFFFF;">Terminé</p>
     {% endif %}
 </div>
 <div class="info-customer">

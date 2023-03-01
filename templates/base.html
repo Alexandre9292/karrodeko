@@ -1,70 +1,73 @@
 {% load static %}
 <html>
-    <head>
-        <title>KARRO DEKO</title>
-         <link rel="stylesheet" href="{% static 'app.css' %}">
-         <link rel="shortcut icon" type="image/x-icon" href="/static/images/logo.jpg"/>
-        <!--<link rel="shortcut icon" type="image/x-icon" href="/static/images/logo.ico"/> -->
 
-        <!-- <script src="{% static 'app.js' %}"></script> -->
+<head>
+    <title>KARRO DEKO</title>
+    <link rel="stylesheet" href="{% static 'app.css' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/logo.jpg" />
+    <!--<link rel="shortcut icon" type="image/x-icon" href="/static/images/logo.ico"/> -->
 
-        {% block css %}
+    <!-- <script src="{% static 'app.js' %}"></script> -->
 
-        {% endblock css %}
+    {% block css %}
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% endblock css %}
 
-        <script>
-            $(document).ready(function () {   
-                var menuLien = document.querySelector('.menu-lien');
-                $("#menu-button").click(function() {
-                    if(menuLien.style.display == "block"){
-                        menuLien.style.display="none";
-                    }else{
-                        menuLien.style.display="block";
-                    }          
-                }); 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var menuLien = document.querySelector('.menu-lien');
+            $("#menu-button").click(function () {
+                if (menuLien.style.display == "block") {
+                    menuLien.style.display = "none";
+                } else {
+                    menuLien.style.display = "block";
+                }
             });
-        </script>
+        });
+    </script>
 
-        {% block javascripts %}
+    {% block javascripts %}
 
-        {% endblock javascripts %}
-    </head>
-    <body>
-        <header>
-            <div class="content-header no-print">               
-                <a href="{% url 'dashbord' %}" style="text-decoration: none;">
-                    <img class="logo" src="{% static 'images/logo.jpg'%}">  
-                </a> 
-            </div>
-            <div id="menu-button" class="menu-button">
-                <img class="menu-icone" src="{% static 'images/menu.png'%}">  
-            </div> 
-            {%  if user.is_authenticated %}
-                <div class="login-button">
-                    <a href="{% url 'logout' %}">Se déconnecter</a>
-                </div>
-                <ul class="menu-lien">
-                    <li><a href="{% url 'logout' %}">Se déconnecter</a></li>
-                </ul>
-            {%  else %}
-                <div class="login-button">
-                    <a href="{% url 'login' %}">Se connecter</a>
-                </div>
-                <ul class="menu-lien">
-                    <li><a href="{% url 'login' %}">Se connecter</a></li>
-                </ul>
-            {% endif %}
-        </header>                
-        <div class="separator-header"></div>
-        <div class="main">
-            {% block content %}{% endblock content %}
+    {% endblock javascripts %}
+</head>
+
+<body>
+    <header class="no-print">
+        <div class="content-header no-print">
+            <a href="{% url 'dashbord' %}" style="text-decoration: none;">
+                <img class="logo" src="{% static 'images/logo.jpg'%}">
+            </a>
         </div>
-        <footer>
-            <div class="sub_footer no-print">
-                <p>Copyright 2023 KARRO DEKO</p>
-            </div>
-        </footer>
-    </body>
+        <div id="menu-button" class="menu-button">
+            <img class="menu-icone" src="{% static 'images/menu.png'%}">
+        </div>
+        {% if user.is_authenticated %}
+        <div class="login-button">
+            <a href="{% url 'logout' %}">Se déconnecter</a>
+        </div>
+        <ul class="menu-lien">
+            <li><a href="{% url 'logout' %}">Se déconnecter</a></li>
+        </ul>
+        {% else %}
+        <div class="login-button">
+            <a href="{% url 'login' %}">Se connecter</a>
+        </div>
+        <ul class="menu-lien">
+            <li><a href="{% url 'login' %}">Se connecter</a></li>
+        </ul>
+        {% endif %}
+    </header>
+    <div class="separator-header"></div>
+    <div class="main">
+        {% block content %}{% endblock content %}
+    </div>
+    <footer>
+        <div class="sub_footer no-print">
+            <p>Copyright 2023 KARRO DEKO</p>
+        </div>
+    </footer>
+</body>
+
 </html>

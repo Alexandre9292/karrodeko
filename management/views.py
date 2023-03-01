@@ -47,7 +47,7 @@ def new_customer(request):
                 customer.signature_client_commande_path = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + fichier  
 
                 customer.is_signed_commande = True
-                customer.status = 1
+                customer.status = models.EN_ATTENTE
                 customer.save()
         
             
@@ -158,7 +158,6 @@ def bon_de_livraison(request, customer_id):
                 customer.signature_KD_path = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + fichierK                
                 bdl.is_signed_KD = True
 
-            customer.status = 4
             customer.save() 
             bdl.save()
             send_bdl(request, customer.id, bdl.id)
@@ -174,6 +173,9 @@ def send_bdl(request, customer_id, bdl_id):
     bdl = get_object_or_404(models.BDL, id=bdl_id)
     descriptions = customer.get_description()
 
+    customer.status =  models.TERMINE
+    customer.save() 
+
     # Générer le HTML à partir d'une vue Django
     html = render_to_string('management/bon_de_livraison_pdf.html', {'customer': customer, 'bdl': bdl, 'descriptions': descriptions})
 
@@ -187,7 +189,12 @@ def send_bdl(request, customer_id, bdl_id):
     if os.path.isfile(directory + '/signature_client.png') and os.path.isfile(directory + '/signature_KD.png') : 
         #Envoie du mail
         message = "Bonjour," + "\n\n" + "Vous trouverez ci-joint le bon de livraison, suite à votre commande chez KARRO DEKO." + "\n\n" + "Au plaisir de vous revoir" + "\n\n" + "Cordialement," + "\n\n" + "KARRO DEKO"
-        recipient_list = ["alexandre.boucher92@gmail.com"]
+        recipient_list = ["karro.deko@gmail.com", customer.email]
+        email = EmailMessage("[KARRO DEKO] Bon de livraison", message, to=recipient_list)
+        email.attach_file(directory + "/BonDeLivraison.pdf")
+        email.send()
+
+        recipient_list = [customer.email]
         email = EmailMessage("[KARRO DEKO] Bon de livraison", message, to=recipient_list)
         email.attach_file(directory + "/BonDeLivraison.pdf")
         email.send()
@@ -207,7 +214,7 @@ def en_cours(request, customer_id, statut):
 @login_required  
 def validation(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
-    customer.status = 4
+    customer.status = models.TERMINE
     customer.save()
     descriptions = customer.get_description()
     return render(request, 'management/info_customer.html', context={'customer': customer, 'descriptions': descriptions})
@@ -216,7 +223,7 @@ def validation(request, customer_id):
 @login_required
 def retour_atelier(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
-    customer.status = 1
+    customer.status = models.EN_ATTENTE
     customer.save()
     descriptions = customer.get_description()
     return render(request, 'management/info_customer.html', context={'customer': customer, 'descriptions': descriptions})

@@ -2,79 +2,85 @@
 {% load static %}
 {% block content %}
 
-    <a href="{% url 'dashbord' %}"><div class="arrow-back"></div></a>
+<a href="{% url 'dashbord' %}">
+    <div class="arrow-back"></div>
+</a>
 
-    <div class="info-status">
-        {% if customer.status == 1 %}
-            <p style="background: #830000; color: #FFFFFF;">En attente</p>
-        {% elif customer.status == 2 %}
-            <p style="background: #ffe70f; color: #000000;">En Cours - Atelier granite</p>
-        {% elif customer.status == 3 %}
-            <p style="background: #ffe70f; color: #000000;">En Cours - Atelier plinthe</p>
-        {% elif customer.status == 4 %}
-            <p style="background: #008325; color: #000000;">Terminé</p>
-        {% else %}
-            <p style="background: #000d83; color: #FFFFFF;">Livré</p>
-        {% endif %}
-    </div>
-    <div class="info-customer">
-        <table>
-            <tbody>
-                <tr>
-                    <td class="info-label">Nom</td>
-                    <td class="info-value">{{ customer.nom }}</td>
-                </tr>   
-                <tr>
-                    <td class="info-label">Prénom</td>
-                    <td class="info-value">{{ customer.prenom }}</td>
-                </tr> 
-                <tr>
-                    <td class="info-label">Numéro</td>
-                    <td class="info-value">{{ customer.numero }}</td>
-                </tr> 
-                <tr>
-                    <td class="info-label">Mail</td>
-                    <td class="info-value">{{ customer.email }}</td>
-                </tr> 
-            </tbody>
-        </table>
-        <p>Description </p>
-        {% for description in descriptions %}    
-            <p>- {{ description }}</p>
-        {% endfor %}
-    </div>
+<div class="info-status">
+    {% if customer.status == 1 %}
+    <p style="background: #830000; color: #FFFFFF;">En attente</p>
+    {% elif customer.status == 2 %}
+    <p style="background: #ffe70f; color: #000000;">En Cours - Atelier granite</p>
+    {% elif customer.status == 3 %}
+    <p style="background: #ffe70f; color: #000000;">En Cours - Atelier plinthe</p>
+    {% elif customer.status == 4 %}
+    <p style="background: #008325; color: #000000;">Terminé</p>
+    {% else %}
+    <p style="background: #000d83; color: #FFFFFF;">Livré</p>
+    {% endif %}
+</div>
+<div class="info-customer">
+    <table>
+        <tbody>
+            <tr>
+                <td class="info-label">Nom</td>
+                <td class="info-value">{{ customer.nom }}</td>
+            </tr>
+            <tr>
+                <td class="info-label">Prénom</td>
+                <td class="info-value">{{ customer.prenom }}</td>
+            </tr>
+            <tr>
+                <td class="info-label">Numéro</td>
+                <td class="info-value">{{ customer.numero }}</td>
+            </tr>
+            <tr>
+                <td class="info-label">Mail</td>
+                <td class="info-value">{{ customer.email }}</td>
+            </tr>
+            <tr>
+                <td class="info-label">Date de commande : </td>
+                <td class="info-value">{{ customer.date_commande|date:"d-m-Y" }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>Description </p>
+    {% for description in descriptions %}
+    <p>- {{ description }}</p>
+    {% endfor %}
+</div>
 
-    <div class="button-cust">
-        <a class="button-element" href="{% url 'edit_customer' customer.id %}">
-                <span>Modifier</span>
-        </a>
-        {% if customer.status == 2  %}
-            <a class="button-element" href="{% url 'validation' customer.id %}">
-                    <span>Valider</span>
-            </a>
-        {% elif customer.status == 1 %}
-            <a class="button-element" href="{% url 'en_cours' customer.id 2 %}">
-                <span>Atelier granite</span>
-            </a>
-            <a class="button-element" href="{% url 'en_cours' customer.id 3 %}">
-                <span>Atelier plinthe</span>
-            </a>
-        {% else %}
-            <a class="button-element" href="{% url 'retour_atelier' customer.id %}">
-                    <span>Retour en atelier</span>
-            </a>
-        {% endif %}
-        <a class="button-element" href="{% url 'etiquette' customer.id %}">
-                <span>Etiquette</span>
-        </a>        
-        {% if customer.status > 2  %}
-            <a class="button-element" href="{% url 'bon_de_livraison' customer.id %}">
-                    <span>Bon de livraison</span>
-            </a>
-        {% endif %}        
-        <a class="button-element" href="{% url 'delete_customer_confirmation' customer.id %}">
-                <span>Supprimer</span>
-        </a>
-    </div>
+<div class="button-cust">
+    <a class="button-element" href="{% url 'edit_customer' customer.id %}">
+        <span>Modifier</span>
+    </a>
+    {% if customer.status == 2 or customer.status == 3 %}
+    <a class="button-element" href="{% url 'validation' customer.id %}">
+        <span>Valider</span>
+    </a>
+    {% elif customer.status == 1 %}
+    <a class="button-element" href="{% url 'en_cours' customer.id 2 %}">
+        <span>Atelier granite</span>
+    </a>
+    <a class="button-element" href="{% url 'en_cours' customer.id 3 %}">
+        <span>Atelier plinthe</span>
+    </a>
+    {% else %}
+    <a class="button-element" href="{% url 'retour_atelier' customer.id %}">
+        <span>Retour en atelier</span>
+    </a>
+    {% endif %}
+    <a class="button-element" href="{% url 'etiquette' customer.id %}">
+        <span>Etiquette</span>
+    </a>
+    {% if customer.status > 3 %}
+    <a class="button-element" href="{% url 'bon_de_livraison' customer.id %}">
+        <span>Bon de livraison</span>
+    </a>
+    {% endif %}
+    <a class="button-element" href="{% url 'delete_customer_confirmation' customer.id %}">
+        <span>Supprimer</span>
+    </a>
+</div>
 
 {% endblock %}

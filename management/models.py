@@ -1,6 +1,14 @@
 from django.db import models
 from django.utils.translation import gettext_lazy  as _
 
+#Status des customer
+EN_ATTENTE = 1
+EN_COURS_GRANITE = 2
+EN_COURS_PLINTHE = 3
+A_LIVRE = 4
+A_RECUPERER = 5
+TERMINE = 6
+
 #Class qui gère les clients
 class Customer(models.Model):
     nom = models.CharField(max_length=100, blank=True, verbose_name='Nom')
@@ -10,6 +18,7 @@ class Customer(models.Model):
     description = models.TextField(blank=True, verbose_name='Description')
     qr_path = models.CharField(max_length=500, blank=True)
     status = models.IntegerField(blank=True, default=1)
+    to_deliver = models.BooleanField(default=False)
     signature_client_path = models.CharField(max_length=500, blank=True)
     signature_KD_path = models.CharField(max_length=500, blank=True)
     signature_client_commande_path = models.CharField(max_length=500, blank=True)

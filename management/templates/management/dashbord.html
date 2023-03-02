@@ -6,11 +6,24 @@
 
     <div class="button">
         <div class="button-dash">
-            <a class="button-element" href="{% url 'new_customer' %}">                
+            <div id="button-create" class="button-element" onclick="createCust()">                
                 <span>Créer</span>
-            </a>
+            </div>
             <a class="button-element button-scan" href="{% url 'scanner' %}">                
                 <span>Scan</span>
+            </a>
+        </div>
+    </div>
+    <div id="id-modal-create" class="modal-create" style="display: none;">
+        <button class="close-button" aria-label="Case de fermeture" type="button" onclick="closeModal()"> 
+            <span aria-hidden="true">&times;</span> 
+        </button>
+        <div class="modal-choices">
+            <a class="button-element" href="{% url 'new_customer' %}">                
+                <span>Nouveau</span>
+            </a>
+            <a class="button-element" href="{% url 'import_customer' %}">                
+                <span>Importer</span>
             </a>
         </div>
     </div>
@@ -94,15 +107,23 @@
         function recherche() {
             let input = document.getElementById('searchbar').value;
             input = input.toLowerCase();
-            let vam = document.getElementsByClassName('searchable');
+            let cust = document.getElementsByClassName('searchable');
         
-            for (i = 0; i < vam.length; i ++) {
-                if (! vam[i].innerHTML.toLowerCase().includes(input)) {
-                    vam[i].style.display = "none";
+            for (i = 0; i < cust.length; i ++) {
+                if (! cust[i].innerHTML.toLowerCase().includes(input)) {
+                    cust[i].style.display = "none";
                 } else {
-                    vam[i].style.display = "";
+                    cust[i].style.display = "";
                 }
             }
+        }
+
+        function createCust() {
+            $("#id-modal-create").show();
+        }
+
+        function closeModal() {
+            $("#id-modal-create").hide();
         }
     </script>
 {% endblock %}
@@ -113,11 +134,88 @@
             width: 50%;
         }
 
+        .close-button { 
+            position: absolute; 
+            color: #830000; 
+            right: 1rem; 
+            top: 0.5rem; 
+            font-size: 2em; 
+            line-height: 1; 
+            cursor: pointer; 
+            border: 1px solid #830000;
+        }
+
+        .modal-create {
+            position: absolute;
+            top: 0;
+            left: 25%;
+            width: 50%;
+            height: 300px;
+            background-color: #fff;
+            z-index: 3;
+            border-radius: 20px;
+            border: solid 3px #830000;
+            -webkit-box-shadow: 0 0 200px rgba(128, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 200px rgba(128, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-choices {
+            position: absolute;
+            top: 80px;
+            display: grid;
+            grid-template-columns: auto auto;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .modal-choices a {
+            background-color: #830000;
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 25%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .modal-choices a:hover {
+            background-color: #a72323;
+        }
+
         @media (max-width: 1500px) {
             #searchbar {
                 width: 100%;
             }
+
+            .modal-create {
+                width: 80%;
+                left: 10%;
+            }
         }
+
+        @media (max-width: 800px) {
+            .modal-create {
+                width: 100%;
+                left: 0;
+                border-radius: 0px;
+            }
+        }
+
+        .modal-create:before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            bottom: -8px;
+            left: -8px;
+            z-index: -1;
+            background: rgba(0, 0, 0, 0.08);
+            border-radius: 4px;
+        }
+
     </style>
 {% endblock %}
 

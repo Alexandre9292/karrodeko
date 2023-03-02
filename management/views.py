@@ -55,6 +55,48 @@ def new_customer(request):
 
     return render(request, 'management/new_customer.html', context={'form': form, 'date': date.today()})
 
+#Import client
+@login_required
+def import_customer(request):
+    customers = models.Customer.objects.all().order_by('nom')
+    return render(request, 'management/import_customer.html', context={'customers': customers})
+
+#Création aprés import client
+@login_required
+def import_to_create_customer(request, customer_id):
+    customer = get_object_or_404(models.Customer, id=customer_id)  
+    new_customer = models.Customer(nom=customer.nom, prenom=customer.prenom, numero=customer.numero, email=customer.email)
+
+    form = forms.CreateCustomerForm(instance=new_customer)
+    if request.method == 'POST':
+        form = forms.CreateCustomerForm(request.POST, instance=new_customer)
+        if form.is_valid():
+            customer = form.save()
+
+            fichier = '/signature_client_commande.png';               
+            directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom 
+                    
+            if os.path.isdir(directory) is False :
+                os.makedirs(directory)
+
+            signatureC = request.POST['signature_client_commande']
+            if signatureC and os.path.isfile(os.path.join(directory, fichier)) is False :
+                # enregistrer le fichier PNG
+                image_sign = open(directory + fichier, 'w')
+                with open(directory + fichier, "wb") as f:
+                    f.write(base64.b64decode(signatureC.split(",")[1]))
+                image_sign.close()
+                
+                customer.signature_client_commande_path = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + fichier  
+
+                customer.is_signed_commande = True
+                customer.save()
+        
+            
+            return redirect('etiquette', customer_id=customer.id)
+        
+    return render(request, 'management/new_customer_import.html', context={'form': form, 'date': date.today()})
+
 #Modifier client
 @login_required
 def edit_customer(request, customer_id):

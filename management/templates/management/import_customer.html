@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+    <div class="tab-import">
+        <input id="searchbar" onkeyup="recherche()" type="text" name="search" placeholder="Recherche...">
+        <div class="cards-import">
+            {% for customer in customers %}
+                <a href="{% url 'import_to_create_customer' customer.id %}" class="card-import searchable">
+                    <h2>{{ customer.nom }} {{ customer.prenom }}</h2>
+                    <h2>{{ customer.numero }}</h2>
+                    <h2>{{ customer.email }}</h2>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        function recherche() {
+            let input = document.getElementById('searchbar').value;
+            input = input.toLowerCase();
+            let cust = document.getElementsByClassName('searchable');
+        
+            for (i = 0; i < cust.length; i ++) {
+                if (! cust[i].innerHTML.toLowerCase().includes(input)) {
+                    cust[i].style.display = "none";
+                } else {
+                    cust[i].style.display = "";
+                }
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block css %}
+    <style>
+        #searchbar {
+            width: 100%;
+        }
+
+        .tab-import{
+            width: 75%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tab-import a {
+            font-family: 'Lucida Grande', Tahoma, Verdana, sans-serif;
+            border-radius: 20px;
+            border: 1px solid #830000;
+            padding: 10px 20px;
+            text-align: center;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            font-size: 20;
+            margin-top: 20px;
+        }
+
+        .cards-import {
+            display: grid;
+            grid-template-columns: auto;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .card-import h2 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            color: #333;
+        }
+
+        @media (max-width: 600px) {
+
+            .tab-import{
+                width: 100%;
+            }
+        }
+    </style>
+{% endblock %}
+
+
+

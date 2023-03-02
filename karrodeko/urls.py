@@ -33,6 +33,8 @@ urlpatterns = [
 
     path('user/new', authentication.views.new_user_page, name='new_user_page'),
     path('customer/new', management.views.new_customer, name='new_customer'),
+    path('customer/import', management.views.import_customer, name='import_customer'),
+    path('customer/import/create/<int:customer_id>/', management.views.import_to_create_customer, name='import_to_create_customer'),
     path('customer/<int:customer_id>/', management.views.info_customer, name='info_customer'),
     path('customer/<int:customer_id>/edit', management.views.edit_customer, name='edit_customer'),
     path('customer/<int:customer_id>/delete', management.views.delete_customer, name='delete_customer'),

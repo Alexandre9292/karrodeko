@@ -202,7 +202,6 @@ def bon_de_livraison(request, customer_id):
 
             customer.save() 
             bdl.save()
-            send_bdl(request, customer.id, bdl.id)
         return redirect('bon_de_livraison', customer_id=customer.id)
 
     return render(request, 'management/bdl.html', context={'form': form, 'customer': customer, 'bdl': bdl, 'descriptions': descriptions})

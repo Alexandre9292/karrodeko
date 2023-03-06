@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-    <a href="{% url 'info_customer' customer.id %}"><div class="arrow-back"></div></a>
+    <a href="{% url 'info_customer' customer.id %}"><div class="arrow-back no-print"></div></a>
 
     <div class="info-bdl">
         <div class="bdl-header">
@@ -82,14 +82,17 @@
         </div>
     </div>
 
-    <div class="button-dash">
+    <div class="button-bdl no-print">
         {% if bdl.is_signed_KD and bdl.is_signed_client %}
             <a class="button-element" href="{% url 'send_bdl' customer.id bdl.id %}">
                 <span>Envoyer</span>
             </a>
+            <a class="button-element" onclick="printBDL()">
+                <span>Imprimer</span>
+            </a>
         {% else %}
             <a id="btn-submit" class="button-element">
-                <span>Envoyer</span>
+                <span>Valider</span>
             </a>
         {% endif %}  
     </div>
@@ -108,6 +111,10 @@
     }
     function clearSignatureK() {
         $("#signatureK").jSignature("reset");
+    }
+
+    function printBDL() {
+        window.print();
     }
 
     $(document).ready(function () {  

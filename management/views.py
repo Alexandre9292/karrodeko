@@ -100,14 +100,14 @@ def import_to_create_customer(request, customer_id):
 #Modifier client
 @login_required
 def edit_customer(request, customer_id):
-    customer = get_object_or_404(models.Customer, id=customer_id)    
+    customer = get_object_or_404(models.Customer, id=customer_id)   
     descriptions = customer.get_description()
     form = forms.CreateCustomerForm(instance=customer)
     if request.method == 'POST':
         form = forms.CreateCustomerForm(request.POST, instance=customer)
         if form.is_valid():
             customer = form.save()
-
+            
             fichier = '/signature_client_commande.png';               
             directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom 
                     

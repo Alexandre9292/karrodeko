@@ -154,6 +154,8 @@
         const input_first = document.getElementById("id_desc_1");
         let descList = [input_first];
 
+        var signatureC_id = document.getElementById("signatureC");
+
         $("#id-add-desc").click(function() { 
             cptInput++;
             const input = document.createElement("input");
@@ -178,8 +180,10 @@
             const valueString = values.join(";");
             $("#id_description").val(valueString);
 
-            var signature_C_data = $('#signatureC').jSignature('getData', 'image');
-            $("#id_signature_client_commande").val(signature_C_data);
+            if (signatureC_id && $('#signatureC').jSignature('getData','base30')[1].length>1) {
+                var signature_C_data = $('#signatureC').jSignature('getData', 'image');
+                $("#id_signature_client_commande").val(signature_C_data);
+            }
         }); 
 
         

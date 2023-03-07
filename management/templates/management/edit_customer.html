@@ -166,6 +166,8 @@
         const inputContainer = document.getElementById("list-input-desc");
         let descList = [];
 
+        var signatureC_id = document.getElementById("signatureC");
+
         for (let i = 0; i < inputContainer.children.length; i++) {
             descList.push(inputContainer.children[i]);
         }
@@ -194,8 +196,10 @@
             const valueString = values.join(";");
             $("#id_description").val(valueString);
 
-            var signature_C_data = $('#signatureC').jSignature('getData', 'image');
-            $("#id_signature_client_commande").val(signature_C_data);
+            if (signatureC_id && $('#signatureC').jSignature('getData','base30')[1].length>1) {
+                var signature_C_data = $('#signatureC').jSignature('getData', 'image');
+                $("#id_signature_client_commande").val(signature_C_data);
+            }
         }); 
 
         $("#id_description").hide();

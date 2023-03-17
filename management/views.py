@@ -230,7 +230,7 @@ def send_bdl(request, customer_id, bdl_id):
     if os.path.isfile(directory + '/signature_client.png') and os.path.isfile(directory + '/signature_KD.png') : 
         #Envoie du mail
         message = "Bonjour," + "\n\n" + "Vous trouverez ci-joint le bon de livraison, suite à votre commande chez KARRO DEKO." + "\n\n" + "Au plaisir de vous revoir" + "\n\n" + "Cordialement," + "\n\n" + "KARRO DEKO"
-        recipient_list = ["karro.deko@gmail.com", customer.email]
+        recipient_list = ["karro.deko@gmail.com"]
         email = EmailMessage("[KARRO DEKO] Bon de livraison", message, to=recipient_list)
         email.attach_file(directory + "/BonDeLivraison.pdf")
         email.send()

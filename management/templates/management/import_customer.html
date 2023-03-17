@@ -6,11 +6,11 @@
     <div class="tab-import">
         <input id="searchbar" onkeyup="recherche()" type="text" name="search" placeholder="Recherche...">
         <div class="cards-import">
-            {% for customer in customers %}
-                <a href="{% url 'import_to_create_customer' customer.id %}" class="card-import searchable">
-                    <h2>{{ customer.nom }} {{ customer.prenom }}</h2>
-                    <h2>{{ customer.numero }}</h2>
-                    <h2>{{ customer.email }}</h2>
+            {% for client in clients %}
+                <a href="{% url 'import_to_create_customer' client.id %}" class="card-import searchable">
+                    <h2>{{ client.nom }} {{ client.prenom }}</h2>
+                    <h2>{{ client.numero }}</h2>
+                    <h2>{{ client.email }}</h2>
                 </a>
             {% endfor %}
         </div>

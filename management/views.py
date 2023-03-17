@@ -30,6 +30,15 @@ def new_customer(request):
         if form.is_valid():
             customer = form.save()
 
+            clients = models.Clients.objects.all()
+            client = models.Clients(nom=customer.nom, prenom=customer.prenom, numero=customer.numero, email=customer.email)
+            save = True
+            for c in clients :
+                if client.email == c.email :
+                    save = False
+            if save :
+                client.save()
+
             fichier = '/signature_client_commande.png';               
             directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom 
                     
@@ -58,14 +67,14 @@ def new_customer(request):
 #Import client
 @login_required
 def import_customer(request):
-    customers = models.Customer.objects.all().order_by('nom')
-    return render(request, 'management/import_customer.html', context={'customers': customers})
+    clients = models.Clients.objects.all().order_by('nom')
+    return render(request, 'management/import_customer.html', context={'clients': clients})
 
 #Création aprés import client
 @login_required
-def import_to_create_customer(request, customer_id):
-    customer = get_object_or_404(models.Customer, id=customer_id)  
-    new_customer = models.Customer(nom=customer.nom, prenom=customer.prenom, numero=customer.numero, email=customer.email)
+def import_to_create_customer(request, client_id):
+    client = get_object_or_404(models.Clients, id=client_id)  
+    new_customer = models.Customer(nom=client.nom, prenom=client.prenom, numero=client.numero, email=client.email)
 
     form = forms.CreateCustomerForm(instance=new_customer)
     if request.method == 'POST':
@@ -106,7 +115,15 @@ def edit_customer(request, customer_id):
     if request.method == 'POST':
         form = forms.CreateCustomerForm(request.POST, instance=customer)
         if form.is_valid():
+
+            client = models.Clients.objects.filter(email=customer.email)
+
             customer = form.save()
+
+            client.nom = customer.nom
+            client.prenom = customer.prenom
+            client.numero = customer.numero
+            client[0].save()
             
             fichier = '/signature_client_commande.png';               
             directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom 

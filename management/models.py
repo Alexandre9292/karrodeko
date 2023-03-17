@@ -10,6 +10,13 @@ A_LIVRE = 5
 TERMINE = 6
 
 #Class qui gère les clients
+class Clients(models.Model):
+    nom = models.CharField(max_length=100, blank=True, default="", verbose_name='Nom')
+    prenom = models.CharField(max_length=100, blank=True, default="", verbose_name='Prénom')
+    numero = models.CharField(max_length=100, blank=True, default="", verbose_name='Numéro')
+    email = models.EmailField(_('email address'), unique=False)
+
+#Class qui gère les commandes
 class Customer(models.Model):
     nom = models.CharField(max_length=100, blank=True, default="", verbose_name='Nom')
     prenom = models.CharField(max_length=100, blank=True, default="", verbose_name='Prénom')

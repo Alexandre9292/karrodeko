@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="delete">
+    <h1>Etes-vous sûr de vouloir supprimer le client : <br>{{ client.nom }} {{ client.prenom }} ?</h1>
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="info-delete-submit">
+            <a href="{% url 'delete_client' client.id  %}">
+              <div class="info-delete-button">
+                Oui
+              </div>
+            </a>
+            <a href="{% url 'import_customer'  %}">
+              <div class="info-delete-button">
+                Non
+              </div>
+            </a>
+        </div> 
+    </form>
+  </div>
+{% endblock %}

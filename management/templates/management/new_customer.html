@@ -90,6 +90,17 @@
 <a href="{% url 'dashbord' %}"><div class="arrow-back"></div></a>
 
 <div class="form-cust">
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field_errors in form.errors.values %}
+                    {% for error in field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
     <form method="post" id="id-form-cust">
         <div class="form-content">
             <label for="id_nom">Nom</label>{{ form.nom }}
@@ -102,6 +113,9 @@
         </div>
         <div class="form-content">
             <label for="id_email">Email</label>{{ form.email }}
+        </div>
+        <div class="form-content">
+            <label for="id_email">Email 2</label>{{ form.email2 }}
         </div>
         <br><br>
         <div class="form-content">

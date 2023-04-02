@@ -5,7 +5,7 @@ from . import models
 class CreateCustomerForm(forms.ModelForm):
     class Meta:
         model = models.Customer
-        fields = ['nom', 'prenom', 'numero', 'email', 'description', 'to_deliver']
+        fields = ['nom', 'prenom', 'numero', 'email', 'email2', 'description', 'to_deliver']
 
 #Formulaire de création d'un bon de livraison
 class CreateSignatureForm(forms.Form):

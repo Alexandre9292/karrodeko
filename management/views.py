@@ -31,13 +31,15 @@ def new_customer(request):
             customer = form.save()
 
             clients = models.Clients.objects.all()
-            client = models.Clients(nom=customer.nom, prenom=customer.prenom, numero=customer.numero, email=customer.email)
+            client = models.Clients(nom=customer.nom, prenom=customer.prenom, numero=customer.numero, email=customer.email, email2=customer.email2)
             save = True
             for c in clients :
-                if client.email == c.email :
+                if client.email == c.email and client.email2 == c.email2 :
                     save = False
             if save :
                 client.save()
+
+            customer.client = client
 
             fichier = '/signature_client_commande.png';               
             directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom 
@@ -57,9 +59,8 @@ def new_customer(request):
 
                 customer.is_signed_commande = True
                 customer.status = models.EN_ATTENTE
-                customer.save()
-        
-            
+                
+            customer.save()
             return redirect('etiquette', customer_id=customer.id)
 
     return render(request, 'management/new_customer.html', context={'form': form, 'date': date.today()})
@@ -74,13 +75,24 @@ def import_customer(request):
 @login_required
 def import_to_create_customer(request, client_id):
     client = get_object_or_404(models.Clients, id=client_id)  
-    new_customer = models.Customer(nom=client.nom, prenom=client.prenom, numero=client.numero, email=client.email)
+    new_customer = models.Customer(nom=client.nom, prenom=client.prenom, numero=client.numero, email=client.email, email2=client.email2)
 
     form = forms.CreateCustomerForm(instance=new_customer)
     if request.method == 'POST':
         form = forms.CreateCustomerForm(request.POST, instance=new_customer)
         if form.is_valid():
             customer = form.save()
+
+            clients = models.Clients.objects.all()
+            client_tmp = models.Clients(nom=customer.nom, prenom=customer.prenom, numero=customer.numero, email=customer.email, email2=customer.email2)
+            save = True
+            for c in clients :
+                if client_tmp.email == c.email and client_tmp.email2 == c.email2 :
+                    save = False
+            if save :
+                client_tmp.save()
+
+            customer.client = client_tmp
 
             fichier = '/signature_client_commande.png';               
             directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom 
@@ -99,9 +111,9 @@ def import_to_create_customer(request, client_id):
                 customer.signature_client_commande_path = settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom + fichier  
 
                 customer.is_signed_commande = True
-                customer.save()
         
             
+            customer.save()
             return redirect('etiquette', customer_id=customer.id)
         
     return render(request, 'management/new_customer_import.html', context={'form': form, 'date': date.today()})
@@ -109,21 +121,22 @@ def import_to_create_customer(request, client_id):
 #Modifier client
 @login_required
 def edit_customer(request, customer_id):
-    customer = get_object_or_404(models.Customer, id=customer_id)   
+    customer = get_object_or_404(models.Customer, id=customer_id)  
+    client = get_object_or_404(models.Clients, id=customer.client.id)   
     descriptions = customer.get_description()
     form = forms.CreateCustomerForm(instance=customer)
     if request.method == 'POST':
         form = forms.CreateCustomerForm(request.POST, instance=customer)
         if form.is_valid():
 
-            client = models.Clients.objects.filter(email=customer.email)
-
             customer = form.save()
-
+            
             client.nom = customer.nom
             client.prenom = customer.prenom
             client.numero = customer.numero
-            client[0].save()
+            client.email = customer.email
+            client.email2 = customer.email2
+            client.save()
             
             fichier = '/signature_client_commande.png';               
             directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom 
@@ -149,7 +162,7 @@ def edit_customer(request, customer_id):
         
     return render(request, 'management/edit_customer.html', context={'form': form, 'customer': customer, 'descriptions': descriptions})
 
-#Supprimer client
+#Supprimer Customer
 @login_required
 def delete_customer(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
@@ -160,11 +173,25 @@ def delete_customer(request, customer_id):
     customers = models.Customer.objects.all().order_by('-id')
     return render(request, 'management/dashbord.html', context={'list_customer': customers})
 
-#Confirmation de suppression client
+#Confirmation de suppression Customer
 @login_required
 def delete_customer_confirmation(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
-    return render(request, 'management/delete_customer.html', context={'customer': customer})    
+    return render(request, 'management/delete_customer.html', context={'customer': customer})  
+
+#Supprimer client
+@login_required
+def delete_client(request, client_id):
+    client = get_object_or_404(models.Clients, id=client_id)
+    client.delete()
+    clients = models.Clients.objects.all().order_by('nom')
+    return render(request, 'management/import_customer.html', context={'clients': clients})
+
+#Confirmation de suppression client
+@login_required
+def delete_client_confirmation(request, client_id):
+    client = get_object_or_404(models.Clients, id=client_id)
+    return render(request, 'management/delete_client.html', context={'client': client})   
 
 #Info du client
 @login_required
@@ -247,15 +274,15 @@ def send_bdl(request, customer_id, bdl_id):
     if os.path.isfile(directory + '/signature_client.png') and os.path.isfile(directory + '/signature_KD.png') : 
         #Envoie du mail
         message = "Bonjour," + "\n\n" + "Vous trouverez ci-joint le bon de livraison, suite à votre commande chez KARRO DEKO." + "\n\n" + "Au plaisir de vous revoir" + "\n\n" + "Cordialement," + "\n\n" + "KARRO DEKO"
-        recipient_list = ["karro.deko@gmail.com", customer.email]
+        recipient_list = ["karro.deko@gmail.com", customer.email, customer.email2]
         email = EmailMessage("[KARRO DEKO] Bon de livraison", message, to=recipient_list)
         email.attach_file(directory + "/BonDeLivraison.pdf")
         email.send()
 
-        recipient_list = [customer.email]
+        """ recipient_list = [customer.email]
         email = EmailMessage("[KARRO DEKO] Bon de livraison", message, to=recipient_list)
         email.attach_file(directory + "/BonDeLivraison.pdf")
-        email.send()
+        email.send() """
 
     return redirect('bon_de_livraison', customer_id=customer.id)
 

@@ -7,11 +7,17 @@
         <input id="searchbar" onkeyup="recherche()" type="text" name="search" placeholder="Recherche...">
         <div class="cards-import">
             {% for client in clients %}
-                <a href="{% url 'import_to_create_customer' client.id %}" class="card-import searchable">
-                    <h2>{{ client.nom }} {{ client.prenom }}</h2>
-                    <h2>{{ client.numero }}</h2>
-                    <h2>{{ client.email }}</h2>
-                </a>
+                <div class="card-import searchable">
+                    <a href="{% url 'import_to_create_customer' client.id %}" class="">
+                        <h2>{{ client.nom }} {{ client.prenom }}</h2>
+                        <h2>{{ client.numero }}</h2>
+                        <h2>{{ client.email }}</h2>
+                        <h2>{{ client.email2 }}</h2>
+                        <br>
+                    </a>
+                    
+                    <a id="suppr" href="{% url 'delete_client_confirmation' client.id %}" class="card-import-suppr">x</a>
+                </div>
             {% endfor %}
         </div>
     </div>
@@ -33,6 +39,12 @@
                     cust[i].style.display = "";
                 }
             }
+        }
+
+        function deleteClient() {
+            const suppr = document.getElementById('suppr');
+            alert(suppr.href);
+            location.href = suppr.href;
         }
     </script>
 {% endblock %}
@@ -69,10 +81,23 @@
             margin-right: auto;
         }
 
+        .card-import {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 95% 5%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         .card-import h2 {
             font-size: 1.5rem;
             margin-top: 0;
             color: #333;
+        }
+
+        .card-import-suppr {
+            height: 25px;
+            color: #830000;
         }
 
         @media (max-width: 600px) {

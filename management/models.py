@@ -15,13 +15,16 @@ class Clients(models.Model):
     prenom = models.CharField(max_length=100, blank=True, default="", verbose_name='Prénom')
     numero = models.CharField(max_length=100, blank=True, default="", verbose_name='Numéro')
     email = models.EmailField(_('email address'), unique=False)
+    email2 = models.EmailField(_('email address'), unique=False, default="")
 
 #Class qui gère les commandes
 class Customer(models.Model):
+    client = models.ForeignKey(Clients, on_delete=models.CASCADE, null=True)
     nom = models.CharField(max_length=100, blank=True, default="", verbose_name='Nom')
     prenom = models.CharField(max_length=100, blank=True, default="", verbose_name='Prénom')
     numero = models.CharField(max_length=100, blank=True, default="", verbose_name='Numéro')
     email = models.EmailField(_('email address'), unique=False)
+    email2 = models.EmailField(_('email address'), unique=False, default="")
     description = models.TextField(blank=True, verbose_name='Description')
     qr_path = models.CharField(max_length=500, blank=True)
     status = models.IntegerField(blank=True, default=1)

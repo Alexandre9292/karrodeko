@@ -34,7 +34,7 @@ def new_customer(request):
             client = models.Clients(nom=customer.nom, prenom=customer.prenom, numero=customer.numero, email=customer.email, email2=customer.email2)
             save = True
             for c in clients :
-                if client.email == c.email and client.email2 == c.email2 :
+                if client.nom == c.nom and client.prenom == c.prenom and client.email == c.email and client.email2 == c.email2 :
                     save = False
             if save :
                 client.save()
@@ -87,12 +87,13 @@ def import_to_create_customer(request, client_id):
             client_tmp = models.Clients(nom=customer.nom, prenom=customer.prenom, numero=customer.numero, email=customer.email, email2=customer.email2)
             save = True
             for c in clients :
-                if client_tmp.email == c.email and client_tmp.email2 == c.email2 :
+                if client_tmp.nom == c.nom and client_tmp.prenom == c.prenom and client_tmp.email == c.email and client_tmp.email2 == c.email2 :
                     save = False
             if save :
                 client_tmp.save()
-
-            customer.client = client_tmp
+                customer.client = client_tmp
+            else :
+                customer.client = client
 
             fichier = '/signature_client_commande.png';               
             directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom 

@@ -15,7 +15,7 @@ class Clients(models.Model):
     prenom = models.CharField(max_length=100, blank=True, default="", verbose_name='Prénom')
     numero = models.CharField(max_length=100, blank=True, default="", verbose_name='Numéro')
     email = models.EmailField(_('email address'), unique=False)
-    email2 = models.EmailField(_('email address'), unique=False, default="")
+    email2 = models.EmailField(_('email address'), unique=False, blank=True, default="")
 
 #Class qui gère les commandes
 class Customer(models.Model):
@@ -24,7 +24,7 @@ class Customer(models.Model):
     prenom = models.CharField(max_length=100, blank=True, default="", verbose_name='Prénom')
     numero = models.CharField(max_length=100, blank=True, default="", verbose_name='Numéro')
     email = models.EmailField(_('email address'), unique=False)
-    email2 = models.EmailField(_('email address'), unique=False, default="")
+    email2 = models.EmailField(_('email address'), unique=False, blank=True, default="")
     description = models.TextField(blank=True, verbose_name='Description')
     qr_path = models.CharField(max_length=500, blank=True)
     status = models.IntegerField(blank=True, default=1)

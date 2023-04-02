@@ -2,100 +2,102 @@
 {% load static %}
 {% block content %}
 
-    <a href="{% url 'info_customer' customer.id %}"><div class="arrow-back no-print"></div></a>
+<a href="{% url 'info_customer' customer.id %}">
+    <div class="arrow-back no-print"></div>
+</a>
 
-    <div class="info-bdl">
-        <div class="bdl-header">
-            <h1 style="margin: 20;">BON DE LIVRAISON</h1>
-            <img class="logo" src="{% static 'images/logo.jpg'%}" style="margin: 0;">  
-        </div>
-        <div class="bdl-content">
-            <div class="dbl-content-info">
-                <div class="bdl-local">
-                    <h2>KARRO DEKO</h2>
-                    <p>1 rue des poivriers,</p>
-                    <p>Bras-Panon 97412, La Réunion</p>
-                    <p>Téléphone: 0692 36 29 37</p>
-                </div>
-                <div class="bdl-dest">
-                    <h2>Destinataire : {{customer.nom}} {{customer.prenom}}</h2>
-                    <p>Email: {{customer.email}}</p>
-                    <p>Téléphone: {{customer.numero}}</p>
-                </div>
+<div class="info-bdl">
+    <div class="bdl-header">
+        <h1 style="margin: 20;">BON DE LIVRAISON</h1>
+        <img class="logo" src="{% static 'images/logo.jpg'%}" style="margin: 0;">
+    </div>
+    <div class="bdl-content">
+        <div class="dbl-content-info">
+            <div class="bdl-local">
+                <h2>KARRO DEKO</h2>
+                <p>1 rue des poivriers, ZAE PANIANDY</p>
+                <p>Bras-Panon 97412, La Réunion</p>
+                <p>Téléphone: 0692 36 29 37</p>
             </div>
-            <br><br>
-            <div class="bdl-desc">
-                <h2>Description</h2>
-                {% for description in descriptions %}    
-                    <p style="font-weight: bold;font-size: 18px;">- {{ description }}</p>
-                {% endfor %}
+            <div class="bdl-dest">
+                <h2>Destinataire : {{customer.nom}} {{customer.prenom}}</h2>
+                <p>Email: {{customer.email}}</p>
+                <p>Téléphone: {{customer.numero}}</p>
             </div>
         </div>
         <br><br>
-        <div class="signature">
-            <h2>Livré le: &nbsp;&nbsp;{{ bdl.date_livraison|date:"d-m-Y" }}</h2>       
-            
-            {% if not bdl.is_signed_client or not bdl.is_signed_KD %}
-                <form id="bdl-form" method="post" enctype="multipart/form-data">
-                    {{ form.signature_client }}
-                    {{ form.signature_KD }}
-                    <h2>Signature Client: </h2>
-                    </br>
-                    {% if bdl.is_signed_client %}
-                        <img class="signature-img-cont" src="{{ customer.signature_client_path }}"> 
-                    {% else %}
-                        <div class="bdl-signature">
-                            <div class="signature-cadre"  id="signatureC"></div>
-                            <a class="clearCanvas" id="clearCanvasC" onclick="clearSignatureC()" >Effacer</a>
-                        </div>
-                    {% endif %} 
-
-                    <h2>Signature KARRO DEKO: </h2>
-                    </br>
-                    {% if bdl.is_signed_KD %}
-                        <img class="signature-img-cont" src="{{ customer.signature_KD_path }}"> 
-                    {% else %}
-                        <div class="bdl-signature">
-                            <div class="signature-cadre" id="signatureK"></div>
-                            <a class="clearCanvas" id="clearCanvasK" onclick="clearSignatureK()" >Effacer</a>
-                        </div>
-                    {% endif %}
-
-                    {% csrf_token %}
-                </form>
-            {% else %}   
-                <div class="signature-zone">
-                    <div class="signature-img">
-                        <h2>Signature KARRO DEKO</h2>
-                        {% if bdl.is_signed_KD %}
-                            <img class="signature-img-cont" src="{{ customer.signature_KD_path }}"> 
-                        {% endif %}
-                    </div>
-                    <div class="signature-img">
-                        <h2>Signature Client</h2>                
-                        {% if bdl.is_signed_client %}
-                            <img class="signature-img-cont" src="{{ customer.signature_client_path }}"> 
-                        {% endif %}
-                    </div>
-                </div>
-            {% endif %}            
+        <div class="bdl-desc">
+            <h2>Description</h2>
+            {% for description in descriptions %}
+            <p style="font-weight: bold;font-size: 18px;">- {{ description }}</p>
+            {% endfor %}
         </div>
     </div>
+    <br><br>
+    <div class="signature">
+        <h2>Livré le: &nbsp;&nbsp;{{ bdl.date_livraison|date:"d-m-Y" }}</h2>
 
-    <div class="button-bdl no-print">
-        {% if bdl.is_signed_KD and bdl.is_signed_client %}
-            <a class="button-element" href="{% url 'send_bdl' customer.id bdl.id %}">
-                <span>Envoyer</span>
-            </a>
-            <a class="button-element" onclick="printBDL()">
-                <span>Imprimer</span>
-            </a>
+        {% if not bdl.is_signed_client or not bdl.is_signed_KD %}
+        <form id="bdl-form" method="post" enctype="multipart/form-data">
+            {{ form.signature_client }}
+            {{ form.signature_KD }}
+            <h2>Signature Client: </h2>
+            </br>
+            {% if bdl.is_signed_client %}
+            <img class="signature-img-cont" src="{{ customer.signature_client_path }}">
+            {% else %}
+            <div class="bdl-signature">
+                <div class="signature-cadre" id="signatureC"></div>
+                <a class="clearCanvas" id="clearCanvasC" onclick="clearSignatureC()">Effacer</a>
+            </div>
+            {% endif %}
+
+            <h2>Signature KARRO DEKO: </h2>
+            </br>
+            {% if bdl.is_signed_KD %}
+            <img class="signature-img-cont" src="{{ customer.signature_KD_path }}">
+            {% else %}
+            <div class="bdl-signature">
+                <div class="signature-cadre" id="signatureK"></div>
+                <a class="clearCanvas" id="clearCanvasK" onclick="clearSignatureK()">Effacer</a>
+            </div>
+            {% endif %}
+
+            {% csrf_token %}
+        </form>
         {% else %}
-            <a id="btn-submit" class="button-element">
-                <span>Valider</span>
-            </a>
-        {% endif %}  
+        <div class="signature-zone">
+            <div class="signature-img">
+                <h2>Signature KARRO DEKO</h2>
+                {% if bdl.is_signed_KD %}
+                <img class="signature-img-cont" src="{{ customer.signature_KD_path }}">
+                {% endif %}
+            </div>
+            <div class="signature-img">
+                <h2>Signature Client</h2>
+                {% if bdl.is_signed_client %}
+                <img class="signature-img-cont" src="{{ customer.signature_client_path }}">
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
     </div>
+</div>
+
+<div class="button-bdl no-print">
+    {% if bdl.is_signed_KD and bdl.is_signed_client %}
+    <a class="button-element" href="{% url 'send_bdl' customer.id bdl.id %}">
+        <span>Envoyer</span>
+    </a>
+    <a class="button-element" onclick="printBDL()">
+        <span>Imprimer</span>
+    </a>
+    {% else %}
+    <a id="btn-submit" class="button-element">
+        <span>Valider</span>
+    </a>
+    {% endif %}
+</div>
 
 {% endblock %}
 
@@ -117,37 +119,37 @@
         window.print();
     }
 
-    $(document).ready(function () {  
+    $(document).ready(function () {
         var signatureC_id = document.getElementById("signatureC");
         var signatureK_id = document.getElementById("signatureK");
-        if(signatureC_id) {
-            var signatureC = $("#signatureC").jSignature({ 
+        if (signatureC_id) {
+            var signatureC = $("#signatureC").jSignature({
                 'color': '#000000',
                 'background-color': '#ffffff',
                 'decor-color': '#d0e3f0'
             });
-        } 
-        if(signatureK_id) {
-            var signatureK = $("#signatureK").jSignature({ 
+        }
+        if (signatureK_id) {
+            var signatureK = $("#signatureK").jSignature({
                 'color': '#000000',
                 'background-color': '#ffffff',
                 'decor-color': '#d0e3f0'
             });
-        } 
-            
-        $("#btn-submit").click(function() {
-            if (signatureC_id && $('#signatureC').jSignature('getData','base30')[1].length>1) {
+        }
+
+        $("#btn-submit").click(function () {
+            if (signatureC_id && $('#signatureC').jSignature('getData', 'base30')[1].length > 1) {
                 var signature_C_data = $('#signatureC').jSignature('getData', 'image');
                 $("#id_signature_client").val(signature_C_data);
             }
 
-            if (signatureK_id && $('#signatureK').jSignature('getData','base30')[1].length>1) {
+            if (signatureK_id && $('#signatureK').jSignature('getData', 'base30')[1].length > 1) {
                 var signature_K_data = $('#signatureK').jSignature('getData', 'image');
                 $("#id_signature_KD").val(signature_K_data);
             }
 
-            $("#bdl-form").submit();            
-        }); 
+            $("#bdl-form").submit();
+        });
 
         $("#id_signature_client").hide();
         $("#id_signature_KD").hide();

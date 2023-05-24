@@ -5,9 +5,13 @@
     <a href="{% url 'info_customer' customer.id %}"><div class="arrow-back no-print"></div></a>
     
     <div id="etiquette" class="etiquette">
-        <img class="img-qr" src="{{ code_url }}">
-        <h2 style="font-size: 40px;">{{ customer.nom }} {{ customer.prenom }}</h2>        
-        <h3 style="font-size: 30px;">Date : {{ customer.date_commande|date:"d-m-Y" }}</h3>
+        <div class="etiquette-content">
+            <div><img class="img-qr" src="{{ code_url }}"></div>
+            <div>
+                <h2 style="font-size: 40px;">{{ customer.nom }} {{ customer.prenom }}</h2>        
+                <h3 style="font-size: 30px;">Date : {{ customer.date_commande|date:"d-m-Y" }}</h3>
+            </div>
+        </div>
     </div>
 
     <div class="button-dash no-print">

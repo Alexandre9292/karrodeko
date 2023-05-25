@@ -350,7 +350,7 @@ def etiquette(request, customer_id):
 @login_required
 def etiquette_impression(request, customer_id):
     customer = get_object_or_404(models.Customer, id=customer_id)
-    return render(request, 'management/info_customer.html', context={'customer': customer})
+    return render(request, 'management/etiquette_imp.html', context={'customer': customer, 'code_url': customer.qr_path})
 
 #Fonction de scanner
 @login_required

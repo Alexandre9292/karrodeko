@@ -1,0 +1,99 @@
+<html>
+
+<head>
+    <title>KARRO DEKO</title>
+
+    <style>
+        .etiquette {
+            box-sizing: border-box;
+            border-radius: 15px;
+            background-color: #f2f2f2;
+            padding: 20px;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+
+            margin-bottom: 50px;
+            margin-top: 40px;
+
+            text-align: center;
+        }
+
+        .etiquette-content {
+            display: grid;
+            grid-template-columns: 30% 70%;
+            text-align: center;
+        }
+
+        .img-qr {
+            height: 200px;
+        }
+
+        @media (min-width: 600px) {
+            .etiquette {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .etiquette {
+                width: 100%;
+            }
+
+            .etiquette-content {
+                display: grid;
+                grid-template-columns: 100%;
+                text-align: center;
+            }
+        }
+
+        @media print {
+            .etiquette {
+                box-sizing: border-box;
+                border-radius: 15px;
+                background-color: #f2f2f2;
+                padding: 20px;
+                width: 50%;
+                margin-left: auto;
+                margin-right: auto;
+
+                margin-bottom: 50px;
+                margin-top: 40px;
+
+                text-align: center;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+
+    <script>
+        function printEtiquette() {
+            window.print();
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <div id="etiquette" class="etiquette">
+        <div class="etiquette-content">
+            <div><img class="img-qr" src="{{ code_url }}"></div>
+            <div>
+                <h2 style="font-size: 40px;">{{ customer.nom }} {{ customer.prenom }}</h2>        
+                <h3 style="font-size: 30px;">Date : {{ customer.date_commande|date:"d-m-Y" }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="button-dash no-print">
+        <a class="button-element" onclick="printEtiquette()">
+            <span>Imprimer</span>
+        </a>
+    </div>
+</body>
+
+</html>

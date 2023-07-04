@@ -31,15 +31,18 @@ def new_customer(request):
             customer = form.save()
 
             clients = models.Clients.objects.all()
-            client = models.Clients(nom=customer.nom, prenom=customer.prenom, numero=customer.numero, email=customer.email, email2=customer.email2)
             save = True
-            for c in clients :
-                if client.nom == c.nom and client.prenom == c.prenom and client.email == c.email and client.email2 == c.email2 :
-                    save = False
-            if save :
-                client.save()
 
-            customer.client = client
+            for c in clients :
+                if customer.nom == c.nom and customer.prenom == c.prenom and customer.email == c.email and customer.email2 == c.email2 :
+                    save = False
+            if save :                
+                client = models.Clients(nom=customer.nom, prenom=customer.prenom, numero=customer.numero, email=customer.email, email2=customer.email2)
+                client.save()
+                customer.client = client
+            else :
+                customer.client = get_object_or_404(models.Clients, nom=customer.nom, prenom=customer.prenom, numero=customer.numero, email=customer.email, email2=customer.email2)
+            
 
             fichier = '/signature_client_commande.png';               
             directory = str(settings.BASE_DIR) + settings.MEDIA_URL + str(customer.id) + customer.nom + customer.prenom 
